@@ -1,9 +1,24 @@
 import express from "express";
 import { authRoutes } from "./routes/authRoutes";
+import session from "express-session";
+import { getEnv } from "./utils/getEnv";
+import passport from "passport";
+import { isAuthenticated } from "./middleware/authMiddleware";
 
 const app = express();
-
 app.use(express.json());
+
+app.use(
+  session({
+    secret: getEnv("SESSION_SECRET"),
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use("/auth", authRoutes);
 
