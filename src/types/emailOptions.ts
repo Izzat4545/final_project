@@ -1,6 +1,5 @@
 export interface EmailOptions {
   fromEmail: string;
-  fromName: string;
   toEmail: string;
   toName: string;
   subject: string;

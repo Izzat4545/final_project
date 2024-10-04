@@ -1,34 +1,28 @@
-import Mailjet from "node-mailjet";
 import { getEnv } from "../utils/getEnv";
 import { EmailOptions } from "../types/emailOptions";
+import nodemailer from "nodemailer";
 
-const mailjet = Mailjet.apiConnect(getEnv("EMAIL_KEY"), getEnv("EMAIL_SECRET"));
-
-export const sendEmail = async (options: EmailOptions): Promise<void> => {
+export const sendEmail = async (emailOptions: EmailOptions) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: getEnv("EMAIL"),
+      pass: getEnv("EMAIL_PASSWORD"),
+    },
+  });
+  console.log(emailOptions);
   try {
-    const request = mailjet.post("send", { version: "v3.1" }).request({
-      Messages: [
-        {
-          From: {
-            Email: options.fromEmail,
-            Name: options.fromName,
-          },
-          To: [
-            {
-              Email: options.toEmail,
-              Name: options.toName,
-            },
-          ],
-          Subject: options.subject,
-          TextPart: options.textBody,
-          HTMLPart: options.htmlBody,
-        },
-      ],
+    const info = await transporter.sendMail({
+      from: emailOptions.fromEmail,
+      to: emailOptions.toEmail,
+      subject: emailOptions.subject,
+      text: emailOptions.textBody,
+      html: emailOptions.htmlBody,
     });
-
-    const result = await request;
-    console.log(result.body);
+    console.log(`Email sent: ${info}`);
+    return { message: `Email sent successfully to ${emailOptions.toEmail}` };
   } catch (error) {
-    console.error("Error sending email:", error);
+    console.error(`Error sending email: ${error}`);
+    throw new Error(`Could not send email: ${error}`);
   }
 };

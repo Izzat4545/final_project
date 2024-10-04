@@ -7,6 +7,11 @@ import passport from "passport";
 import { getEnv } from "../utils/getEnv";
 import { redisClient } from "../config/redis";
 import { sendEmail } from "./emailService";
+import {
+  deleteResetCodeRedis,
+  getResetCodeRedis,
+  storeResetCodeRedis,
+} from "./redisService";
 
 export const registerService = async (
   name: string | null,
@@ -50,21 +55,6 @@ export const loginService = async (email: string, password: string) => {
   return { token };
 };
 
-export const storeResetCodeRedis = async (
-  email: string,
-  code: string
-): Promise<void> => {
-  const expiresIn = 2 * 60; //2 mins
-  await redisClient.set(`resetCode:${email}`, code, { EX: expiresIn });
-};
-
-export const getResetCodeRedis = async (
-  email: string
-): Promise<string | null> => {
-  const code = await redisClient.get(`resetCode:${email}`);
-  return code;
-};
-
 export const sendCodeService = async (email: string, code: string) => {
   try {
     const user = await User.findOne({ where: { email } });
@@ -75,12 +65,15 @@ export const sendCodeService = async (email: string, code: string) => {
 
     await sendEmail({
       fromEmail: "no-reply@example.com",
-      fromName: "Gift me Support",
       toEmail: email,
       toName: user.name || "User",
       subject: "Password Reset Code",
-      textBody: `Your password reset code is ${code}. It will expire in 2 minutes.`,
-      htmlBody: `<p>Your password reset code is <strong>${code}</strong>. It will expire in 2 minutes.</p>`,
+      textBody: `Hello ${
+        user.name || "User"
+      } your password reset code is ${code}. It will expire in 10 minutes.`,
+      htmlBody: `<p>Hello ${
+        user.name || "User"
+      } your password reset code is <strong>${code}</strong>. It will expire in 10 minutes.</p>`,
     });
 
     await storeResetCodeRedis(email, code.toString());
@@ -102,6 +95,7 @@ export const verifyCodeService = async (email: string, code: string) => {
     if (actualCode !== code) {
       throw new Error("Invalid code provided");
     }
+    await deleteResetCodeRedis(email);
     return true;
   } catch (error) {
     throw new Error((error as Error).message);
@@ -109,6 +103,7 @@ export const verifyCodeService = async (email: string, code: string) => {
 };
 
 export const resetPasswordService = async (email: string, password: string) => {
+  // NEED VALIDATION
   try {
     const user = await User.findOne({ where: { email } });
 
