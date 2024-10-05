@@ -2,11 +2,13 @@ import { authRoutes } from "./routes/authRoutes";
 import express from "express";
 import { getEnv } from "./utils/getEnv";
 import passport from "passport";
+import { requestLogger } from "./middleware/requestLogger";
 import session from "express-session";
 // import { isAuthenticated } from "./middleware/authMiddleware";
 
 const app = express();
 app.use(express.json());
+app.use(requestLogger);
 
 app.use(
   session({
