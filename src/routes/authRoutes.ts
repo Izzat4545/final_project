@@ -1,4 +1,3 @@
-import { Router } from "express";
 import {
   googleAuth,
   googleAuthCallback,
@@ -7,12 +6,19 @@ import {
   resetPasswordController,
   sendCodeController,
 } from "../controller/authController";
+import {
+  validateEmail,
+  validateLogin,
+  validateRegister,
+  validateResetPassword,
+} from "../middleware/validators/authValidaton";
+import { Router } from "express";
 import passport from "passport";
 
 export const authRoutes = Router();
 
-authRoutes.post("/register", registerController);
-authRoutes.post("/login", loginController);
+authRoutes.post("/register", validateRegister, registerController);
+authRoutes.post("/login", validateLogin, loginController);
 
 authRoutes.get("/google", googleAuth);
 authRoutes.get(
@@ -21,5 +27,9 @@ authRoutes.get(
   googleAuthCallback
 );
 
-authRoutes.post("/sendcode", sendCodeController);
-authRoutes.post("/resetpassword", resetPasswordController);
+authRoutes.post("/sendcode", validateEmail, sendCodeController);
+authRoutes.post(
+  "/resetpassword",
+  validateResetPassword,
+  resetPasswordController
+);

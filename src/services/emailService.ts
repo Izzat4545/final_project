@@ -1,5 +1,5 @@
-import { getEnv } from "../utils/getEnv";
 import { EmailOptions } from "../types/emailOptions";
+import { getEnv } from "../utils/getEnv";
 import nodemailer from "nodemailer";
 
 export const sendEmail = async (emailOptions: EmailOptions) => {
@@ -10,7 +10,6 @@ export const sendEmail = async (emailOptions: EmailOptions) => {
       pass: getEnv("EMAIL_PASSWORD"),
     },
   });
-  console.log(emailOptions);
   try {
     const info = await transporter.sendMail({
       from: emailOptions.fromEmail,
@@ -19,7 +18,7 @@ export const sendEmail = async (emailOptions: EmailOptions) => {
       text: emailOptions.textBody,
       html: emailOptions.htmlBody,
     });
-    console.log(`Email sent: ${info}`);
+    console.log(`Email sent: ${info.response}`);
     return { message: `Email sent successfully to ${emailOptions.toEmail}` };
   } catch (error) {
     console.error(`Error sending email: ${error}`);

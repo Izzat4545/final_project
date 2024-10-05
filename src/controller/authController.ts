@@ -1,16 +1,16 @@
 import { Request, Response } from "express";
+import { loginService, registerService } from "../services/authService";
 import {
-  loginService,
-  registerService,
   resetPasswordService,
   sendCodeService,
   verifyCodeService,
-} from "../services/authService";
+} from "../services/authForgotPasswordService";
 import passport from "passport";
 import { randomCodeGenerator } from "../utils/randomCodeGenerator";
 
 export const registerController = async (req: Request, res: Response) => {
   const { name, email, password, repeatPassword } = req.body;
+
   try {
     const user = await registerService(name, email, password, repeatPassword);
     res.status(201).json({ message: "User registered successfully", ...user });
@@ -35,19 +35,19 @@ export const sendCodeController = async (req: Request, res: Response) => {
   try {
     const code = randomCodeGenerator();
     const send = await sendCodeService(email, code);
-    res.status(200).json({ message: send });
+    res.status(200).json(send);
   } catch (error) {
     res.status(400).json({ error: (error as Error).message });
   }
 };
 
 export const resetPasswordController = async (req: Request, res: Response) => {
-  const { email, code, newPassword } = req.body;
+  const { email, code, password } = req.body;
   try {
     const isValid = await verifyCodeService(email, code);
     if (isValid) {
-      await resetPasswordService(email, newPassword);
-      res.status(200).json({ message: "Password reset successfully!" });
+      const resetMessage = await resetPasswordService(email, password);
+      res.status(200).json(resetMessage);
     }
   } catch (error) {
     res.status(400).json({ error: (error as Error).message });

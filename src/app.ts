@@ -1,9 +1,9 @@
-import express from "express";
 import { authRoutes } from "./routes/authRoutes";
-import session from "express-session";
+import express from "express";
 import { getEnv } from "./utils/getEnv";
 import passport from "passport";
-import { isAuthenticated } from "./middleware/authMiddleware";
+import session from "express-session";
+// import { isAuthenticated } from "./middleware/authMiddleware";
 
 const app = express();
 app.use(express.json());
