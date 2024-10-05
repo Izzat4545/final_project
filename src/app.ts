@@ -4,6 +4,7 @@ import { getEnv } from "./utils/getEnv";
 import passport from "passport";
 import { requestLogger } from "./middleware/requestLogger";
 import session from "express-session";
+import { settinsRoutes } from "./routes/settingsRoutes";
 // import { isAuthenticated } from "./middleware/authMiddleware";
 
 const app = express();
@@ -23,5 +24,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/auth", authRoutes);
+
+app.use(settinsRoutes);
 
 export default app;
