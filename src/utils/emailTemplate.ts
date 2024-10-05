@@ -10,10 +10,10 @@ export const emailTemplate = (
     subject: "Password Reset Code",
     textBody: `Hello ${
       name || "User"
-    } your password reset code is ${code}. It will expire in 10 minutes.`,
+    } your password reset link is https://example.com/${code}. It will expire in 10 minutes.`,
     htmlBody: `<p>Hello ${
       name || "User"
-    } your password reset code is <strong>${code}</strong>. It will expire in 10 minutes.</p>`,
+    } your password reset link is <strong>https://example.com/${code}</strong>. It will expire in 10 minutes.</p>`,
   };
   return template;
 };
