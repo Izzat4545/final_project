@@ -3,9 +3,12 @@ import {
   getResetCodeRedis,
   storeResetCodeRedis,
 } from "./redisService";
+import {
+  emailChangedPasswordTemplate,
+  emailCodeTemplate,
+} from "../utils/emailTemplate";
 import User from "../models/userModel";
 import bcrypt from "bcrypt";
-import { emailTemplate } from "../utils/emailTemplate";
 import { sendEmail } from "./emailService";
 
 export const sendCodeService = async (email: string, code: string) => {
@@ -15,7 +18,7 @@ export const sendCodeService = async (email: string, code: string) => {
     if (!user) {
       throw new Error("This email doesn't exist");
     }
-    await sendEmail(emailTemplate(email, user?.name, code));
+    await sendEmail(emailCodeTemplate(email, user?.name, code));
 
     await storeResetCodeRedis(email, code.toString());
 
@@ -63,6 +66,7 @@ export const resetPasswordService = async (email: string, password: string) => {
     // REMOVING FROM REDIS AFTER UPDATING THE PASSWORD
     await deleteResetCodeRedis(email);
 
+    await sendEmail(emailChangedPasswordTemplate(email, user?.name));
     return { message: "Password reset successfully!" };
   } catch (error) {
     throw new Error((error as Error).message);
