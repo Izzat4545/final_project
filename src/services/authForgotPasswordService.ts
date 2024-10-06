@@ -2,7 +2,7 @@ import {
   deleteResetCodeRedis,
   getResetCodeRedis,
   storeResetCodeRedis,
-} from "./redisService";
+} from "./cacheService";
 import {
   emailChangedPasswordTemplate,
   emailCodeTemplate,

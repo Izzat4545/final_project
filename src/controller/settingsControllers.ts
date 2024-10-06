@@ -1,17 +1,23 @@
 import { Request, Response } from "express";
 import { User } from "../types/User";
-// import { User } from "../types/User";
+import { editProfileService } from "../services/settingsService";
+
 export const settingsController = async (req: Request, res: Response) => {
-  // const { name, email, password, repeatPassword } = req.body;
-  const user = req.user as User;
-  console.log(user.email);
+  const { oldPassword, newPassword, repeatPassword, newEmail, newName } =
+    req.body;
+  try {
+    const user = req.user as User;
+    const profile = await editProfileService(
+      user.email,
+      oldPassword,
+      newPassword,
+      repeatPassword,
+      newEmail,
+      newName
+    );
 
-  res.end();
-
-  // try {
-  //   const user = await registerService(name, email, password, repeatPassword);
-  //   res.status(201).json({ message: "User registered successfully", ...user });
-  // } catch (error) {
-  //   res.status(400).json({ error: (error as Error).message });
-  // }
+    res.status(201).send(profile);
+  } catch (error) {
+    res.status(400).json({ error: (error as Error).message });
+  }
 };

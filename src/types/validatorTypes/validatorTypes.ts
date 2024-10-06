@@ -11,3 +11,11 @@ export interface registerType extends loginType {
 export interface codeType extends loginType {
   code: string;
 }
+
+export interface settingsType {
+  newName?: string;
+  newEmail?: string;
+  oldPassword: string;
+  newPassword: string;
+  repeatPassword: string;
+}
