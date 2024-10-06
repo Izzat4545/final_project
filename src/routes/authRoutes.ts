@@ -14,11 +14,12 @@ import {
 } from "../middleware/validators/authValidaton";
 import { Router } from "express";
 import passport from "passport";
+import { rateLimiter } from "../middleware/rateLimiter";
 
 export const authRoutes = Router();
 
-authRoutes.post("/register", validateRegister, registerController);
-authRoutes.post("/login", validateLogin, loginController);
+authRoutes.post("/register", rateLimiter, validateRegister, registerController);
+authRoutes.post("/login", rateLimiter, validateLogin, loginController);
 
 authRoutes.get("/google", googleAuth);
 authRoutes.get(
