@@ -5,6 +5,7 @@ import {
   sendCodeService,
   verifyCodeService,
 } from "../services/authForgotPasswordService";
+import { getEnv } from "../utils/getEnv";
 import passport from "passport";
 import { randomCodeGenerator } from "../utils/randomCodeGenerator";
 
@@ -60,5 +61,6 @@ export const googleAuth = passport.authenticate("google", {
 
 export const googleAuthCallback = (req: Request, res: Response) => {
   const user = req.user as { token: string };
-  res.redirect(`http://localhost:5173/dashboard?token=${user.token}`);
+  const frontendLink = getEnv("FRONTEND_LINK");
+  res.redirect(`${frontendLink}/dashboard?token=${user.token}`);
 };

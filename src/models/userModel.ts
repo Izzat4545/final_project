@@ -2,14 +2,15 @@ import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../config/database";
 
 class User extends Model {
-  public id!: number;
-  public name!: string | null;
-  public email!: string;
-  public password!: string | null;
-  public googleId!: string | null;
+  declare id: number;
+  declare name: string | null;
+  declare email: string;
+  declare password: string | null;
+  declare googleId: string | null;
+  declare salt: string;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 User.init(
@@ -36,6 +37,11 @@ User.init(
     googleId: {
       type: DataTypes.STRING,
       allowNull: true,
+      unique: true,
+    },
+    salt: {
+      type: DataTypes.STRING,
+      allowNull: false,
       unique: true,
     },
   },
