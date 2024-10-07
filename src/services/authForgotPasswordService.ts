@@ -9,6 +9,7 @@ import {
 } from "../utils/emailTemplate";
 import User from "../models/userModel";
 import bcrypt from "bcrypt";
+import { generateHashedPassword } from "../utils/generateHashedPassword";
 import { sendEmail } from "./emailService";
 
 export const sendCodeService = async (email: string, code: string) => {
@@ -50,24 +51,27 @@ export const resetPasswordService = async (email: string, password: string) => {
     const user = await User.findOne({ where: { email } });
     let isPasswordNew: boolean = false;
     if (user) {
+      // if the user is registered from google he wont have password field
       isPasswordNew = await bcrypt.compare(password, user.password || "");
     }
     if (isPasswordNew) {
       throw new Error("Please enter a new password");
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const { hashedPassword, salt } = await generateHashedPassword(password);
 
     if (!user) {
       throw new Error("This email doesn't exist");
     }
 
-    await user?.update({ password: hashedPassword });
+    await user?.update({ password: hashedPassword, salt });
 
     // REMOVING FROM REDIS AFTER UPDATING THE PASSWORD
     await deleteResetCodeRedis(email);
 
-    await sendEmail(emailChangedPasswordTemplate(email, user?.name));
-    return { message: "Password reset successfully!" };
+    const message = await sendEmail(
+      emailChangedPasswordTemplate(email, user?.name)
+    );
+    return { message };
   } catch (error) {
     throw new Error((error as Error).message);
   }

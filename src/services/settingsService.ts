@@ -1,5 +1,6 @@
 import User from "../models/userModel";
 import bcrypt from "bcrypt";
+import { generateHashedPassword } from "../utils/generateHashedPassword";
 
 export const editProfileService = async (
   email: string,
@@ -31,11 +32,15 @@ export const editProfileService = async (
       password: string;
       email: string;
       name: string;
+      salt: string;
     }> = {};
 
     if (isMatching && isNewPasswordValid) {
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      const { hashedPassword, salt } = await generateHashedPassword(
+        newPassword
+      );
       updateData.password = hashedPassword;
+      updateData.salt = salt;
     }
 
     if (newEmail) {
