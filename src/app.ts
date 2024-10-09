@@ -1,7 +1,9 @@
 import { authRoutes } from "./routes/authRoutes";
+import { eventRoutes } from "./routes/eventsRoutes";
 import express from "express";
 import { getEnv } from "./utils/getEnv";
 import helmet from "helmet";
+import { isAuthenticated } from "./middleware/authMiddleware";
 import passport from "passport";
 import { requestLogger } from "./middleware/requestLogger";
 import session from "express-session";
@@ -26,6 +28,7 @@ app.use(passport.session());
 
 app.use("/auth", authRoutes);
 
-app.use(settinsRoutes);
+app.use(isAuthenticated, settinsRoutes);
+app.use(isAuthenticated, eventRoutes);
 
 export default app;

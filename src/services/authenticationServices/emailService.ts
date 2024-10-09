@@ -1,6 +1,6 @@
-import { EmailOptions } from "../types/emailOptions";
-import { getEnv } from "../utils/getEnv";
-import { logger } from "../config/logger/loggerMain";
+import { EmailOptions } from "../../types/emailOptions";
+import { getEnv } from "../../utils/getEnv";
+import { logger } from "../../config/logger/loggerMain";
 import nodemailer from "nodemailer";
 
 export const sendEmail = async (emailOptions: EmailOptions) => {

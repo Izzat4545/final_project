@@ -1,8 +1,8 @@
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import User from "../models/userModel";
-import { User as UserType } from "../types/User";
-import { generateToken } from "../utils/tokenGenerator";
-import { getEnv } from "../utils/getEnv";
+import User from "../../models/userModel";
+import { UserType as UserType } from "../../types/User";
+import { generateToken } from "../../utils/tokenGenerator";
+import { getEnv } from "../../utils/getEnv";
 import passport from "passport";
 
 passport.serializeUser((user, done) => {

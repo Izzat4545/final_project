@@ -1,6 +1,6 @@
-import User from "../models/userModel";
+import { User } from "../../models/userModel";
 import bcrypt from "bcrypt";
-import { generateHashedPassword } from "../utils/generateHashedPassword";
+import { generateHashedPassword } from "../../utils/generateHashedPassword";
 
 export const editProfileService = async (
   email: string,

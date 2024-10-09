@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { User } from "../types/User";
+import { UserType } from "../types/User";
 import { getEnv } from "../utils/getEnv";
 import jwt from "jsonwebtoken";
 import { logger } from "../config/logger/loggerMain";
@@ -41,7 +41,7 @@ export const isAuthenticated = (
         return;
       }
 
-      const user = decoded as User;
+      const user = decoded as UserType;
       req.user = user;
       next();
     });
