@@ -9,11 +9,14 @@ import {
 import { UserType } from "../types/User";
 
 export const createEventController = async (req: Request, res: Response) => {
-  const { title, eventDate, visibility, description, image } = req.body;
+  const { title, date, visibility, description, image } = req.body;
+  const user = req.user as UserType;
+  console.log(user);
   try {
     const event = await createEventService(
+      user.id.toString(),
       title,
-      eventDate,
+      date,
       visibility,
       description,
       image
@@ -36,9 +39,9 @@ export const getAllEventsController = async (req: Request, res: Response) => {
 };
 
 export const getEventByIdController = async (req: Request, res: Response) => {
+  const { pk } = req.params;
   try {
-    const user = req.user as UserType;
-    const event = await getEventByIdService(user.id.toString());
+    const event = await getEventByIdService(pk);
 
     res.status(200).send(event);
   } catch (error) {
@@ -50,13 +53,13 @@ export const updateEventByIdController = async (
   req: Request,
   res: Response
 ) => {
-  const { title, eventDate, visibility, description, image } = req.body;
+  const { title, date, visibility, description, image } = req.body;
+  const { pk } = req.params;
   try {
-    const user = req.user as UserType;
     const event = await updateEventByIdService(
-      user.id.toString(),
+      pk,
       title,
-      eventDate,
+      date,
       description,
       visibility,
       image
@@ -72,9 +75,9 @@ export const deleteEventByIdController = async (
   req: Request,
   res: Response
 ) => {
+  const { pk } = req.params;
   try {
-    const user = req.user as UserType;
-    const event = await deleteEventByIdService(user.id.toString());
+    const event = await deleteEventByIdService(pk);
 
     res.status(201).send(event);
   } catch (error) {
