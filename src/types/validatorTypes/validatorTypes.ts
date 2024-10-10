@@ -1,3 +1,5 @@
+import { visibilityModes } from "../../utils/enums/visibilityModes";
+
 export interface loginType {
   email: string;
   password: string;
@@ -18,4 +20,12 @@ export interface settingsType {
   oldPassword: string;
   newPassword: string;
   repeatPassword: string;
+}
+
+export interface eventsType {
+  title: string;
+  date: string;
+  visibility: visibilityModes;
+  description?: string;
+  image?: string;
 }

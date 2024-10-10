@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { validateSettingsSchema } from "../../utils/validatorFunctions/settingsValidationSchema";
-import { validatorMain } from "../../utils/validatorFunctions/validatorMain";
+import { validateSettingsSchema } from "../../utils/validatorScemas/settingsValidationSchema";
+import { validatorMain } from "../../utils/validatorScemas/validatorMain";
 
 export const validateSettings = (
   req: Request,
