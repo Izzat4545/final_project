@@ -1,15 +1,13 @@
 import { DataTypes, Model } from "sequelize";
-import { getEnv } from "../utils/getEnv";
+import { currency } from "../utils/enums/currency";
 import { sequelize } from "../config/database";
-import { visibilityModes } from "../utils/enums/visibilityModes";
 
-export class Event extends Model {
+export class Gift extends Model {
   declare id: string;
-  declare title: string;
-  declare date: string;
+  declare name: string;
   declare description: string;
   declare image: string;
-  declare visibility: string;
+  declare price: string;
   declare link: string;
   declare userId: string;
 
@@ -17,7 +15,7 @@ export class Event extends Model {
   declare readonly updatedAt: Date;
 }
 
-Event.init(
+Gift.init(
   {
     id: {
       type: DataTypes.UUID,
@@ -25,12 +23,8 @@ Event.init(
       primaryKey: true,
       allowNull: false,
     },
-    title: {
+    name: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    date: {
-      type: DataTypes.DATE,
       allowNull: false,
     },
     description: {
@@ -41,31 +35,29 @@ Event.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    visibility: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        isIn: {
-          args: [Object.values(visibilityModes)],
-          msg: "Visibility must be one of 'private', 'by_url', or 'public'",
-        },
-      },
-    },
     userId: {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    link: {
-      type: DataTypes.VIRTUAL,
-      get: function () {
-        return `${getEnv("FRONTEND_LINK")}/${this.getDataValue("id")}`;
+    currency: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isIn: {
+          args: [Object.values(currency)],
+          msg: "Visibility must be one of 'so'm', 'rub', or 'usd'",
+        },
       },
+    },
+    link: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
   },
   {
     sequelize,
-    modelName: "Event",
-    tableName: "events",
+    modelName: "Gift",
+    tableName: "gifts",
     timestamps: true,
   }
 );

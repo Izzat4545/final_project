@@ -2,6 +2,7 @@ import { authRoutes } from "./routes/authRoutes";
 import { eventRoutes } from "./routes/eventsRoutes";
 import express from "express";
 import { getEnv } from "./utils/getEnv";
+import { giftRoutes } from "./routes/giftsRoutes";
 import helmet from "helmet";
 import { isAuthenticated } from "./middleware/authMiddleware";
 import passport from "passport";
@@ -30,5 +31,6 @@ app.use("/auth", authRoutes);
 
 app.use(isAuthenticated, settinsRoutes);
 app.use(isAuthenticated, eventRoutes);
+app.use(isAuthenticated, giftRoutes);
 
 export default app;

@@ -1,3 +1,4 @@
+import { currency } from "../../utils/enums/currency";
 import { visibilityModes } from "../../utils/enums/visibilityModes";
 
 export interface loginType {
@@ -28,4 +29,22 @@ export interface eventsType {
   visibility: visibilityModes;
   description?: string;
   image?: string;
+}
+
+export interface giftType {
+  name: string;
+  currency: currency;
+  link: string;
+  price: string;
+  description?: string;
+  image?: string;
+}
+
+export interface createGiftType extends giftType {
+  userId: string;
+  eventId: string;
+}
+
+export interface updateGiftType extends giftType {
+  giftId: string;
 }

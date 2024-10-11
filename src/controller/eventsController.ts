@@ -5,7 +5,7 @@ import {
   getAllEventsService,
   getEventByIdService,
   updateEventByIdService,
-} from "../services/EventServices/EventService";
+} from "../services/eventServices/eventService";
 import { UserType } from "../types/User";
 import { deleteImage } from "../config/imgUploadConfig";
 
