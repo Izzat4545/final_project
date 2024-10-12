@@ -25,9 +25,9 @@ export const createEventService = async (
   }
 };
 
-export const getAllEventsService = async () => {
+export const getAllEventsService = async (userId: string) => {
   try {
-    const events = await Event.findAll();
+    const events = await Event.findAll({ where: { userId } });
 
     return events;
   } catch (error) {
@@ -35,9 +35,9 @@ export const getAllEventsService = async () => {
   }
 };
 
-export const getEventByIdService = async (id: string) => {
+export const getEventByIdService = async (id: string, userId: string) => {
   try {
-    const event = await Event.findByPk(id);
+    const event = await Event.findOne({ where: { id, userId } });
 
     return event;
   } catch (error) {
@@ -47,6 +47,7 @@ export const getEventByIdService = async (id: string) => {
 
 export const updateEventByIdService = async (
   id: string,
+  userId: string,
   title: string,
   eventDate: string,
   description: string,
@@ -54,7 +55,7 @@ export const updateEventByIdService = async (
   image: string
 ) => {
   try {
-    const event = await Event.findByPk(id);
+    const event = await Event.findOne({ where: { id, userId } });
 
     if (!event) {
       throw new Error("Event not found");
@@ -92,9 +93,9 @@ export const updateEventByIdService = async (
   }
 };
 
-export const deleteEventByIdService = async (id: string) => {
+export const deleteEventByIdService = async (id: string, userId: string) => {
   try {
-    const event = await Event.findByPk(id);
+    const event = await Event.findOne({ where: { id, userId } });
 
     await event?.destroy();
 

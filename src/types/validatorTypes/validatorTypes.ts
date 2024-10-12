@@ -46,5 +46,6 @@ export interface createGiftType extends giftType {
 }
 
 export interface updateGiftType extends giftType {
+  userId: string;
   giftId: string;
 }

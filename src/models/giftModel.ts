@@ -10,6 +10,7 @@ export class Gift extends Model {
   declare price: string;
   declare link: string;
   declare userId: string;
+  declare reservedEmail: string;
 
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
@@ -52,6 +53,15 @@ Gift.init(
     link: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    reservedEmail: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        isEmail: {
+          msg: "Must be a valid email address",
+        },
+      },
     },
   },
   {

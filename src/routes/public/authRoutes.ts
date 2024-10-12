@@ -5,16 +5,16 @@ import {
   registerController,
   resetPasswordController,
   sendCodeController,
-} from "../controller/authController";
+} from "../../controller/authController";
 import {
   validateEmail,
   validateLogin,
   validateRegister,
   validateResetPassword,
-} from "../middleware/validators/authValidaton";
+} from "../../middleware/validators/authValidaton";
 import { Router } from "express";
 import passport from "passport";
-import { rateLimiter } from "../middleware/rateLimiter";
+import { rateLimiter } from "../../middleware/rateLimiter";
 
 export const authRoutes = Router();
 

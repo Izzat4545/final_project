@@ -31,8 +31,9 @@ export const createEventController = async (req: Request, res: Response) => {
 };
 
 export const getAllEventsController = async (req: Request, res: Response) => {
+  const user = req.user as UserType;
   try {
-    const event = await getAllEventsService();
+    const event = await getAllEventsService(user.id);
 
     res.status(200).send(event);
   } catch (error) {
@@ -43,8 +44,8 @@ export const getAllEventsController = async (req: Request, res: Response) => {
 export const getEventByIdController = async (req: Request, res: Response) => {
   const { pk } = req.params;
   try {
-    const event = await getEventByIdService(pk);
-
+    const user = req.user as UserType;
+    const event = await getEventByIdService(pk, user.id);
     res.status(200).send(event);
   } catch (error) {
     res.status(400).json({ error: (error as Error).message });
@@ -57,10 +58,11 @@ export const updateEventByIdController = async (
 ) => {
   const { title, date, visibility, description } = req.body;
   const { pk } = req.params;
+  const user = req.user as UserType;
   const newImage = req.file?.path;
   let oldImage = "";
   try {
-    const existingEvent = await getEventByIdService(pk);
+    const existingEvent = await getEventByIdService(pk, user.id);
 
     if (existingEvent && "image" in existingEvent) {
       oldImage = existingEvent.image;
@@ -71,6 +73,7 @@ export const updateEventByIdController = async (
 
     const event = await updateEventByIdService(
       pk,
+      user.id,
       title,
       date,
       description,
@@ -99,7 +102,8 @@ export const deleteEventByIdController = async (
 ) => {
   const { pk } = req.params;
   try {
-    const event = await getEventByIdService(pk);
+    const user = req.user as UserType;
+    const event = await getEventByIdService(pk, user.id);
 
     if (event && "image" in event) {
       const imagePath = event.image;
@@ -107,7 +111,7 @@ export const deleteEventByIdController = async (
         await deleteImage(imagePath);
       }
     }
-    const message = await deleteEventByIdService(pk);
+    const message = await deleteEventByIdService(pk, user.id);
 
     res.status(202).send(message);
   } catch (error) {

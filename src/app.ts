@@ -1,14 +1,14 @@
-import { authRoutes } from "./routes/authRoutes";
-import { eventRoutes } from "./routes/eventsRoutes";
+import { authRoutes } from "./routes/public/authRoutes";
+import { eventRoutes } from "./routes/private/eventsRoutes";
 import express from "express";
 import { getEnv } from "./utils/getEnv";
-import { giftRoutes } from "./routes/giftsRoutes";
+import { giftRoutes } from "./routes/private/giftsRoutes";
+import { giftsPublicRoutes } from "./routes/public/giftsPublicRoutes";
 import helmet from "helmet";
-import { isAuthenticated } from "./middleware/authMiddleware";
 import passport from "passport";
 import { requestLogger } from "./middleware/requestLogger";
 import session from "express-session";
-import { settinsRoutes } from "./routes/settingsRoutes";
+import { settinsRoutes } from "./routes/private/settingsRoutes";
 
 const app = express();
 app.use(express.json());
@@ -29,8 +29,10 @@ app.use(passport.session());
 
 app.use("/auth", authRoutes);
 
-app.use(isAuthenticated, settinsRoutes);
-app.use(isAuthenticated, eventRoutes);
-app.use(isAuthenticated, giftRoutes);
+app.use(settinsRoutes);
+app.use(eventRoutes);
+app.use(giftRoutes);
+
+app.use(giftsPublicRoutes);
 
 export default app;

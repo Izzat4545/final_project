@@ -3,13 +3,13 @@ import { Event } from "../models/eventModel";
 import { UserType } from "../types/User";
 import { visibilityModes } from "../utils/enums/visibilityModes";
 
-export const eventAccessMiddleware = async (
+export const giftAccessMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const { eventId } = req.params;
-  const user = req.user as UserType;
+  const user = req.user as UserType | undefined;
 
   try {
     // Fetch the event by eventId
@@ -23,7 +23,7 @@ export const eventAccessMiddleware = async (
     const { visibility, userId: eventOwnerId } = event;
 
     // Access control logic
-    if (visibility === visibilityModes.PRIVATE && user.id !== eventOwnerId) {
+    if (visibility === visibilityModes.PRIVATE && user?.id !== eventOwnerId) {
       res.status(403).json({ error: "Access denied. This event is private." });
       return;
     }
@@ -32,7 +32,7 @@ export const eventAccessMiddleware = async (
     if (
       visibility === visibilityModes.PUBLIC ||
       visibility === visibilityModes.BY_URL ||
-      (visibility === visibilityModes.PRIVATE && user.id === eventOwnerId)
+      (visibility === visibilityModes.PRIVATE && user?.id === eventOwnerId)
     ) {
       next();
       return;
