@@ -1,5 +1,9 @@
+import {
+  createGiftReservationController,
+  getAllGiftsController,
+  getAllPublicGiftsController,
+} from "../../controller/giftsController";
 import { Router } from "express";
-import { getAllGiftsController } from "../../controller/giftsController";
 import { getGiftByIdController } from "../../controller/giftsController";
 import { giftAccessMiddleware } from "../../middleware/giftAccessMiddleware";
 import { isAuthenticatedSoft } from "../../middleware/authMiddlewareSoft";
@@ -19,3 +23,9 @@ giftsPublicRoutes.get(
   giftAccessMiddleware,
   getGiftByIdController
 );
+
+giftsPublicRoutes.put(
+  "/gifts/reservation/:giftId",
+  createGiftReservationController
+);
+giftsPublicRoutes.get("/gifts/public", getAllPublicGiftsController);

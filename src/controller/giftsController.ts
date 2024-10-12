@@ -4,6 +4,7 @@ import {
   createGiftService,
   deleteGiftByIdService,
   getAllGiftsService,
+  getAllPublicGiftsService,
   getGiftByIdService,
   getGiftCountReservedEmailService,
   getGiftCountService,
@@ -61,6 +62,19 @@ export const getGiftByIdController = async (req: Request, res: Response) => {
   }
 };
 
+export const getAllPublicGiftsController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const gifts = await getAllPublicGiftsService();
+
+    res.status(200).send(gifts);
+  } catch (error) {
+    res.status(400).json({ error: (error as Error).message });
+  }
+};
+
 export const updateGiftByIdController = async (req: Request, res: Response) => {
   const { giftId } = req.params;
   const { currency, description, name, price, link } = req.body;
@@ -107,7 +121,8 @@ export const createGiftReservationController = async (
   req: Request,
   res: Response
 ) => {
-  const { giftId, email } = req.body;
+  const { giftId } = req.params;
+  const { email } = req.body;
   try {
     const reservedGift = await createGiftReservationService(giftId, email);
     res.status(201).json(reservedGift);

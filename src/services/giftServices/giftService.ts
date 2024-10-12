@@ -5,6 +5,7 @@ import {
 import { Event } from "../../models/eventModel";
 import { Gift } from "../../models/giftModel";
 import { Op } from "sequelize";
+import { visibilityModes } from "../../utils/enums/visibilityModes";
 
 export const createGiftService = async (data: createGiftType) => {
   const giftData: Partial<createGiftType> = {
@@ -39,6 +40,25 @@ export const getAllGiftsService = async (eventId: string) => {
     return gifts;
   } catch (error) {
     throw new Error(`Failed to fetch gifts: ${(error as Error).message}`);
+  }
+};
+
+export const getAllPublicGiftsService = async () => {
+  try {
+    const gifts = await Gift.findAll({
+      include: [
+        {
+          model: Event,
+          as: "event",
+          where: { visibility: visibilityModes.PUBLIC },
+        },
+      ],
+    });
+    return gifts;
+  } catch (error) {
+    throw new Error(
+      `Failed to fetch public gifts: ${(error as Error).message}`
+    );
   }
 };
 
