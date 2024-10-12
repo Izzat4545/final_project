@@ -10,6 +10,13 @@ import { isAuthenticatedSoft } from "../../middleware/authMiddlewareSoft";
 
 export const giftsPublicRoutes = Router();
 
+giftsPublicRoutes.get("/gifts/public", getAllPublicGiftsController);
+
+giftsPublicRoutes.put(
+  "/gifts/reservation/:giftId",
+  createGiftReservationController
+);
+
 giftsPublicRoutes.get(
   "/gifts/:eventId",
   isAuthenticatedSoft,
@@ -23,9 +30,3 @@ giftsPublicRoutes.get(
   giftAccessMiddleware,
   getGiftByIdController
 );
-
-giftsPublicRoutes.put(
-  "/gifts/reservation/:giftId",
-  createGiftReservationController
-);
-giftsPublicRoutes.get("/gifts/public", getAllPublicGiftsController);

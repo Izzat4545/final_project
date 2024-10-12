@@ -49,11 +49,14 @@ export const getAllPublicGiftsService = async () => {
       include: [
         {
           model: Event,
-          as: "event",
-          where: { visibility: visibilityModes.PUBLIC },
+          as: "event", // Ensure "event" is the correct alias in your association
+          where: {
+            visibility: visibilityModes.PUBLIC, // Compare visibility as a string, not a UUID
+          },
         },
       ],
     });
+
     return gifts;
   } catch (error) {
     throw new Error(
