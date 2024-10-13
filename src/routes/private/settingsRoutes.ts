@@ -1,7 +1,17 @@
+import {
+  settingsGetController,
+  settingsUpdateController,
+} from "../../controller/settingsControllers";
 import { Router } from "express";
-import { settingsController } from "../../controller/settingsControllers";
+import { isAuthenticated } from "../../middleware/authMiddleware";
 import { validateSettings } from "../../middleware/validators/settingsValidation";
 
 export const settinsRoutes = Router();
 
-settinsRoutes.post("/settings", validateSettings, settingsController);
+settinsRoutes.put(
+  "/settings",
+  isAuthenticated,
+  validateSettings,
+  settingsUpdateController
+);
+settinsRoutes.get("/settings", isAuthenticated, settingsGetController);

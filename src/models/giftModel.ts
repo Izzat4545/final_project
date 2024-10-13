@@ -8,6 +8,7 @@ export class Gift extends Model {
   declare description: string;
   declare image: string;
   declare price: string;
+  declare currency: currency;
   declare link: string;
   declare userId: string;
   declare reservedEmail: string;
@@ -46,9 +47,14 @@ Gift.init(
       validate: {
         isIn: {
           args: [Object.values(currency)],
-          msg: "Visibility must be one of 'so'm', 'rub', or 'usd'",
+          msg: "Visibility must be one of 'UZS', 'RUB', or 'USD'",
         },
       },
+    },
+    price: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: "0",
     },
     link: {
       type: DataTypes.STRING,

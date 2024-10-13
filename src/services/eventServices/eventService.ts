@@ -1,4 +1,5 @@
 import { Event } from "../../models/eventModel";
+import { Gift } from "../../models/giftModel";
 import { visibilityModes } from "../../utils/enums/visibilityModes";
 
 export const createEventService = async (
@@ -27,7 +28,10 @@ export const createEventService = async (
 
 export const getAllEventsService = async (userId: string) => {
   try {
-    const events = await Event.findAll({ where: { userId } });
+    const events = await Event.findAll({
+      where: { userId },
+      include: [{ model: Gift, as: "gifts" }],
+    });
 
     return events;
   } catch (error) {

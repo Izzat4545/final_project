@@ -5,6 +5,8 @@ import {
 import { Event } from "../../models/eventModel";
 import { Gift } from "../../models/giftModel";
 import { Op } from "sequelize";
+import { convertGiftPrices } from "./giftPriceConverter";
+import { currency } from "../../utils/enums/currency";
 import { visibilityModes } from "../../utils/enums/visibilityModes";
 
 export const createGiftService = async (data: createGiftType) => {
@@ -24,7 +26,11 @@ export const createGiftService = async (data: createGiftType) => {
   }
 };
 
-export const getAllGiftsService = async (eventId: string) => {
+const DEFAULT_CURRENCY = currency.USD;
+export const getAllGiftsService = async (
+  eventId: string,
+  currency: currency = DEFAULT_CURRENCY
+) => {
   try {
     // GIFT CAN BE PUBLIC THEREFORE i AM NOT GETTING IT WITH USER ID
     const gifts = await Gift.findAll({
@@ -37,27 +43,42 @@ export const getAllGiftsService = async (eventId: string) => {
         },
       ],
     });
-    return gifts;
+
+    if (!gifts.length) {
+      return [];
+    }
+    // HERE CONVERTING THE PRICE INTO USER PREFERED CURRENCY
+    const convertedGifts = await convertGiftPrices(gifts, currency);
+
+    return convertedGifts;
   } catch (error) {
     throw new Error(`Failed to fetch gifts: ${(error as Error).message}`);
   }
 };
 
-export const getAllPublicGiftsService = async () => {
+export const getAllPublicGiftsService = async (
+  currency: currency = DEFAULT_CURRENCY
+) => {
   try {
     const gifts = await Gift.findAll({
       include: [
         {
           model: Event,
-          as: "event", // Ensure "event" is the correct alias in your association
+          as: "event",
           where: {
-            visibility: visibilityModes.PUBLIC, // Compare visibility as a string, not a UUID
+            visibility: visibilityModes.PUBLIC,
           },
         },
       ],
     });
 
-    return gifts;
+    if (!gifts.length) {
+      return [];
+    }
+    // HERE CONVERTING THE PRICE INTO USER PREFERED CURRENCY
+    const convertedGifts = await convertGiftPrices(gifts, currency);
+
+    return convertedGifts;
   } catch (error) {
     throw new Error(
       `Failed to fetch public gifts: ${(error as Error).message}`

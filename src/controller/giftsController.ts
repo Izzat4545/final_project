@@ -39,9 +39,9 @@ export const createGiftController = async (req: Request, res: Response) => {
 
 export const getAllGiftsController = async (req: Request, res: Response) => {
   const { eventId } = req.params;
+  const user = req.user as UserType | undefined;
   try {
-    const gifts = await getAllGiftsService(eventId);
-
+    const gifts = await getAllGiftsService(eventId, user?.currency);
     const giftCount = await getGiftCountService(eventId);
     const giftReservedCount = await getGiftCountReservedEmailService(eventId);
 

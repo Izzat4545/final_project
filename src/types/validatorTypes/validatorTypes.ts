@@ -1,3 +1,4 @@
+import { Gift } from "../../models/giftModel";
 import { currency } from "../../utils/enums/currency";
 import { visibilityModes } from "../../utils/enums/visibilityModes";
 
@@ -40,6 +41,11 @@ export interface giftType {
   image?: string;
 }
 
+export interface giftReturnType extends Gift {
+  originalPrice: string;
+  originalCurrency: string;
+}
+
 export interface createGiftType extends giftType {
   userId: string;
   eventId: string;
@@ -49,3 +55,15 @@ export interface updateGiftType extends giftType {
   userId: string;
   giftId: string;
 }
+
+export type ExchangeRates = {
+  USD: number;
+  UZS: number;
+  RUB: number;
+};
+
+export type ExchangeRateResponse = {
+  rates: ExchangeRates;
+  base: string;
+  timestamp: number;
+};
