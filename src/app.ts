@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(requestLogger);
 app.use(helmet());
 const corsOptions = {
-  origin: ["https://devboi.site", "https://justme.uz"],
+  origin: ["https://devboi.site", "https://justme.uz", "http://localhost:5173"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };

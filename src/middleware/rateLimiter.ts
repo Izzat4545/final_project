@@ -7,7 +7,7 @@ export const rateLimiter = rateLimit({
     sendCommand: (...args: Array<string>) => redisClient.sendCommand(args),
   }),
   windowMs: 15 * 60 * 1000, // 15 minutes window
-  max: 5, // attemps
+  max: 30, // attemps
   message: { error: "please try again after 15 minutes" },
   statusCode: 429,
 });
