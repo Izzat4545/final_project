@@ -16,15 +16,15 @@ export const settingsUpdateController = async (req: Request, res: Response) => {
   } = req.body;
   try {
     const user = req.user as UserType;
-    const profile = await editProfileService(
-      user.id,
+    const profile = await editProfileService({
+      userId: user.id,
       oldPassword,
       newPassword,
       repeatPassword,
       currency,
       newEmail,
-      newName
-    );
+      newName,
+    });
 
     res.status(201).send(profile);
   } catch (error) {
@@ -37,7 +37,7 @@ export const settingsGetController = async (req: Request, res: Response) => {
   try {
     const profile = await getProfileService(user.id);
 
-    res.status(201).send(profile);
+    res.status(200).send(profile);
   } catch (error) {
     res.status(400).json({ error: (error as Error).message });
   }

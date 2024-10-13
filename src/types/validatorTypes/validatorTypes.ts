@@ -17,14 +17,18 @@ export interface codeType extends loginType {
 }
 
 export interface settingsType {
+  userId: string;
   newName?: string;
   newEmail?: string;
-  oldPassword: string;
-  newPassword: string;
-  repeatPassword: string;
+  currency?: currency;
+  oldPassword?: string;
+  newPassword?: string;
+  repeatPassword?: string;
 }
 
 export interface eventsType {
+  id?: string;
+  userId: string;
   title: string;
   date: string;
   visibility: visibilityModes;

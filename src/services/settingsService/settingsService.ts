@@ -1,17 +1,18 @@
 import { User } from "../../models/userModel";
 import bcrypt from "bcrypt";
-import { currency } from "../../utils/enums/currency";
 import { generateHashedPassword } from "../../utils/generateHashedPassword";
+import { settingsType } from "../../types/validatorTypes/validatorTypes";
 
-export const editProfileService = async (
-  userId: string,
-  oldPassword?: string,
-  newPassword?: string,
-  repeatPassword?: string,
-  currency?: currency,
-  newEmail?: string,
-  newName?: string
-) => {
+export const editProfileService = async (info: settingsType) => {
+  const {
+    userId,
+    currency,
+    newEmail,
+    newName,
+    newPassword,
+    oldPassword,
+    repeatPassword,
+  } = info;
   try {
     const user = await User.findByPk(userId);
 

@@ -1,15 +1,9 @@
 import { Event } from "../../models/eventModel";
 import { Gift } from "../../models/giftModel";
-import { visibilityModes } from "../../utils/enums/visibilityModes";
+import { eventsType } from "../../types/validatorTypes/validatorTypes";
 
-export const createEventService = async (
-  userId: string,
-  title: string,
-  date: string,
-  visibility: visibilityModes,
-  description?: string,
-  image?: string
-) => {
+export const createEventService = async (info: eventsType) => {
+  const { date, title, userId, visibility, description, image } = info;
   try {
     const event = await Event.create({
       userId,
@@ -49,15 +43,8 @@ export const getEventByIdService = async (id: string, userId: string) => {
   }
 };
 
-export const updateEventByIdService = async (
-  id: string,
-  userId: string,
-  title: string,
-  eventDate: string,
-  description: string,
-  visibility: visibilityModes,
-  image: string
-) => {
+export const updateEventByIdService = async (info: eventsType) => {
+  const { date, title, userId, visibility, description, id, image } = info;
   try {
     const event = await Event.findOne({ where: { id, userId } });
 
@@ -65,19 +52,13 @@ export const updateEventByIdService = async (
       throw new Error("Event not found");
     }
 
-    const updateData: Partial<{
-      title: string;
-      eventDate: string;
-      description: string;
-      visibility: visibilityModes;
-      image: string;
-    }> = {};
+    const updateData: Partial<eventsType> = {};
 
     if (title) {
       updateData.title = title;
     }
-    if (eventDate) {
-      updateData.eventDate = eventDate;
+    if (date) {
+      updateData.date = date;
     }
     if (description) {
       updateData.description = description;

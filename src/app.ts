@@ -1,4 +1,5 @@
 import { authRoutes } from "./routes/public/authRoutes";
+import cors from "cors";
 import { eventRoutes } from "./routes/private/eventsRoutes";
 import express from "express";
 import { getEnv } from "./utils/getEnv";
@@ -14,6 +15,13 @@ const app = express();
 app.use(express.json());
 app.use(requestLogger);
 app.use(helmet());
+const corsOptions = {
+  origin: ["https://devboi.site", "https://justme.uz"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 app.use(
   session({

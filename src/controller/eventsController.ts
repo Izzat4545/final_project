@@ -15,14 +15,14 @@ export const createEventController = async (req: Request, res: Response) => {
   const image = req.file?.path;
 
   try {
-    const event = await createEventService(
-      user.id.toString(),
+    const event = await createEventService({
+      userId: user.id.toString(),
       title,
       date,
       visibility,
       description,
-      image
-    );
+      image,
+    });
 
     res.status(201).send(event);
   } catch (error) {
@@ -70,16 +70,15 @@ export const updateEventByIdController = async (
         await deleteImage(oldImage);
       }
     }
-
-    const event = await updateEventByIdService(
-      pk,
-      user.id,
-      title,
+    const event = await updateEventByIdService({
+      id: pk,
+      userId: user.id,
       date,
       description,
+      title,
       visibility,
-      newImage || oldImage
-    );
+      image: newImage || oldImage,
+    });
 
     // If a new image was uploaded, delete the old image
     if (newImage && oldImage) {
