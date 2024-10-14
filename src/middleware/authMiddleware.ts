@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { User } from "../types/User";
+import { User } from "../models/userModel";
+import { UserType } from "../types/User";
 import { getEnv } from "../utils/getEnv";
 import jwt from "jsonwebtoken";
 import { logger } from "../config/logger/loggerMain";
@@ -31,7 +32,7 @@ export const isAuthenticated = (
       return;
     }
 
-    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, JWT_SECRET, async (err, decoded) => {
       if (err) {
         logger.error("Token verification error:", err);
         res.status(401).json({
@@ -41,8 +42,17 @@ export const isAuthenticated = (
         return;
       }
 
-      const user = decoded as User;
+      const user = decoded as UserType;
       req.user = user;
+
+      const dbUser = await User.findByPk(user.id);
+      if (!dbUser) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found",
+        });
+      }
+      req.user = dbUser;
       next();
     });
   } catch (error) {

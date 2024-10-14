@@ -6,10 +6,10 @@ import {
 import {
   emailChangedPasswordTemplate,
   emailCodeTemplate,
-} from "../utils/emailTemplate";
-import User from "../models/userModel";
+} from "../../utils/emailTemplate";
+import { User } from "../../models/userModel";
 import bcrypt from "bcrypt";
-import { generateHashedPassword } from "../utils/generateHashedPassword";
+import { generateHashedPassword } from "../../utils/generateHashedPassword";
 import { sendEmail } from "./emailService";
 
 export const sendCodeService = async (email: string, code: string) => {

@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-import { User } from "../types/User";
-import { editProfileService } from "../services/settingsService";
+import { UserType } from "../types/User";
+import { editProfileService } from "../services/settingsService/settingsService";
 
 export const settingsController = async (req: Request, res: Response) => {
   const { oldPassword, newPassword, repeatPassword, newEmail, newName } =
     req.body;
   try {
-    const user = req.user as User;
+    const user = req.user as UserType;
     const profile = await editProfileService(
       user.email,
       oldPassword,

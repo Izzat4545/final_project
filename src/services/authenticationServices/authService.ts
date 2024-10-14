@@ -1,7 +1,7 @@
-import User from "../models/userModel";
+import { User } from "../../models/userModel";
 import bcrypt from "bcrypt";
-import { generateHashedPassword } from "../utils/generateHashedPassword";
-import { generateToken } from "../utils/tokenGenerator";
+import { generateHashedPassword } from "../../utils/generateHashedPassword";
+import { generateToken } from "../../utils/tokenGenerator";
 
 export const registerService = async (
   name: string | null,

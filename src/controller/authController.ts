@@ -1,10 +1,13 @@
 import { Request, Response } from "express";
-import { loginService, registerService } from "../services/authService";
+import {
+  loginService,
+  registerService,
+} from "../services/authenticationServices/authService";
 import {
   resetPasswordService,
   sendCodeService,
   verifyCodeService,
-} from "../services/authForgotPasswordService";
+} from "../services/authenticationServices/authForgotPasswordService";
 import { getEnv } from "../utils/getEnv";
 import passport from "passport";
 import { randomCodeGenerator } from "../utils/randomCodeGenerator";

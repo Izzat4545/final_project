@@ -4,8 +4,8 @@ import {
   validateLoginSchema,
   validateResetPasswordSchema,
   validateRigisterSchema,
-} from "../../utils/validatorFunctions/authValidationSchema";
-import { validatorMain } from "../../utils/validatorFunctions/validatorMain";
+} from "../../utils/validatorScemas/authValidationSchema";
+import { validatorMain } from "../../utils/validatorScemas/validatorMain";
 
 export const validateRegister = (
   req: Request,
