@@ -20,7 +20,7 @@ export const createEventService = async (info: EventsType) => {
   }
 };
 
-export const getAllEventsService = async (userId: string) => {
+export const getAllEventsByIdService = async (userId: string) => {
   try {
     const events = await Event.findAll({
       where: { userId },

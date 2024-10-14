@@ -41,9 +41,11 @@ export const getAllGiftsController = async (req: Request, res: Response) => {
   const { eventId } = req.params;
   const user = req.user as UserType | undefined;
   try {
-    const gifts = await getAllGiftsService(eventId, user?.currency);
-    const giftCount = await getGiftCountService(eventId);
-    const giftReservedCount = await getGiftCountReservedEmailService(eventId);
+    const [gifts, giftCount, giftReservedCount] = await Promise.all([
+      getAllGiftsService(eventId, user?.currency),
+      getGiftCountService(eventId),
+      getGiftCountReservedEmailService(eventId),
+    ]);
 
     res.status(200).send({ giftCount, giftReservedCount, gifts });
   } catch (error) {

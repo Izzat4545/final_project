@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import {
   createEventService,
   deleteEventByIdService,
-  getAllEventsService,
+  getAllEventsByIdService,
   getEventByIdService,
   updateEventByIdService,
 } from "../services/eventServices/eventService";
@@ -33,7 +33,7 @@ export const createEventController = async (req: Request, res: Response) => {
 export const getAllEventsController = async (req: Request, res: Response) => {
   const user = req.user as UserType;
   try {
-    const event = await getAllEventsService(user.id);
+    const event = await getAllEventsByIdService(user.id);
 
     res.status(200).send(event);
   } catch (error) {
