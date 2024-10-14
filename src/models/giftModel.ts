@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "sequelize";
-import { currency } from "../utils/enums/currency";
+import { Currencies } from "../utils/enums/currency";
 import { sequelize } from "../config/database";
 
 export class Gift extends Model {
@@ -8,7 +8,7 @@ export class Gift extends Model {
   declare description: string;
   declare image: string;
   declare price: string;
-  declare currency: currency;
+  declare currency: Currencies;
   declare link: string;
   declare userId: string;
   declare reservedEmail: string;
@@ -46,7 +46,7 @@ Gift.init(
       allowNull: false,
       validate: {
         isIn: {
-          args: [Object.values(currency)],
+          args: [Object.values(Currencies)],
           msg: "Visibility must be one of 'UZS', 'RUB', or 'USD'",
         },
       },

@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { EventsType } from "../../types/validatorTypes/validatorTypes";
-import { visibilityModes } from "../enums/visibilityModes";
+import { VisibilityModes } from "../enums/visibilityModes";
 
 const TITLE_MIN_LENGTH = 3;
 const TITLE_MAX_LENGTH = 100;
@@ -9,7 +9,7 @@ const DESCRIPTION_MAX_LENGTH = 500;
 const baseEventSchema = Joi.object({
   title: Joi.string().min(TITLE_MIN_LENGTH).max(TITLE_MAX_LENGTH),
   date: Joi.date().iso(),
-  visibility: Joi.string().valid(...Object.values(visibilityModes)),
+  visibility: Joi.string().valid(...Object.values(VisibilityModes)),
 
   description: Joi.string().max(DESCRIPTION_MAX_LENGTH),
   image: Joi.string(),

@@ -1,12 +1,12 @@
 import Joi from "joi";
-import { currency } from "../enums/currency";
+import { Currencies } from "../enums/currency";
 import { SettingsType } from "../../types/validatorTypes/validatorTypes";
 
 export const validateSettingsSchema = (query: SettingsType) => {
   const schema = Joi.object({
     newName: Joi.string().min(4).optional(),
     currency: Joi.string()
-      .valid(...Object.keys(currency))
+      .valid(...Object.keys(Currencies))
       .optional(),
     newEmail: Joi.string().email().optional(),
 

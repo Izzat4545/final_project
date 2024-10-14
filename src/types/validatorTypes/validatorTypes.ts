@@ -1,6 +1,6 @@
 import { Gift } from "../../models/giftModel";
-import { currency } from "../../utils/enums/currency";
-import { visibilityModes } from "../../utils/enums/visibilityModes";
+import { Currencies } from "../../utils/enums/currency";
+import { VisibilityModes } from "../../utils/enums/visibilityModes";
 
 export interface LoginType {
   email: string;
@@ -21,7 +21,7 @@ export interface SettingsType {
   userId: string;
   newName?: string;
   newEmail?: string;
-  currency?: currency;
+  currency?: Currencies;
   oldPassword?: string;
   newPassword?: string;
 }
@@ -31,14 +31,14 @@ export interface EventsType {
   userId: string;
   title: string;
   date: string;
-  visibility: visibilityModes;
+  visibility: VisibilityModes;
   description?: string;
   image?: string;
 }
 
 export interface GiftType {
   name: string;
-  currency: currency;
+  currency: Currencies;
   link: string;
   price: string;
   description?: string;

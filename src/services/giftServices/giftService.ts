@@ -6,8 +6,8 @@ import { Event } from "../../models/eventModel";
 import { Gift } from "../../models/giftModel";
 import { Op } from "sequelize";
 import { convertGiftPrices } from "./giftPriceConverter";
-import { currency } from "../../utils/enums/currency";
-import { visibilityModes } from "../../utils/enums/visibilityModes";
+import { Currencies } from "../../utils/enums/currency";
+import { VisibilityModes } from "../../utils/enums/visibilityModes";
 
 export const createGiftService = async (data: CreateGiftType) => {
   const giftData: Partial<CreateGiftType> = {
@@ -26,10 +26,10 @@ export const createGiftService = async (data: CreateGiftType) => {
   }
 };
 
-const DEFAULT_CURRENCY = currency.USD;
+const DEFAULT_CURRENCY = Currencies.USD;
 export const getAllGiftsService = async (
   eventId: string,
-  currency: currency = DEFAULT_CURRENCY
+  currency: Currencies = DEFAULT_CURRENCY
 ) => {
   try {
     // GIFT CAN BE PUBLIC THEREFORE i AM NOT GETTING IT WITH USER ID
@@ -57,7 +57,7 @@ export const getAllGiftsService = async (
 };
 
 export const getAllPublicGiftsService = async (
-  currency: currency = DEFAULT_CURRENCY
+  currency: Currencies = DEFAULT_CURRENCY
 ) => {
   try {
     const gifts = await Gift.findAll({
@@ -66,7 +66,7 @@ export const getAllPublicGiftsService = async (
           model: Event,
           as: "event",
           where: {
-            visibility: visibilityModes.PUBLIC,
+            visibility: VisibilityModes.PUBLIC,
           },
         },
       ],

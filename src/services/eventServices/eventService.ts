@@ -1,6 +1,6 @@
 import { Event } from "../../models/eventModel";
-import { Gift } from "../../models/giftModel";
 import { EventsType } from "../../types/validatorTypes/validatorTypes";
+import { Gift } from "../../models/giftModel";
 
 export const createEventService = async (info: EventsType) => {
   const { date, title, userId, visibility, description, image } = info;
@@ -39,7 +39,10 @@ export const getEventByIdService = async (id: string, userId: string) => {
 
     return event;
   } catch (error) {
-    return { message: `Failed to get event: ${(error as Error).message}` };
+    return {
+      message: `Failed to get event: ${(error as Error).message}`,
+      image: null,
+    };
   }
 };
 
@@ -70,7 +73,7 @@ export const updateEventByIdService = async (info: EventsType) => {
       updateData.image = image;
     }
 
-    const updatedData = await event?.update({ ...updateData });
+    const updatedData = await event.update({ ...updateData });
 
     return updatedData;
   } catch (error) {

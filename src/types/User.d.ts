@@ -1,10 +1,10 @@
-import { currency } from "../utils/enums/currency";
+import { Currencies } from "../utils/enums/currency";
 
 export interface UserType {
   id: string;
   email: string;
   name?: string | null;
-  currency: currency;
+  currency: Currencies;
   googleId?: string | null;
   token: string;
 }

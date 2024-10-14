@@ -42,10 +42,10 @@ export const getAllEventsController = async (req: Request, res: Response) => {
 };
 
 export const getEventByIdController = async (req: Request, res: Response) => {
-  const { pk } = req.params;
+  const { id } = req.params;
   try {
     const user = req.user as UserType;
-    const event = await getEventByIdService(pk, user.id);
+    const event = await getEventByIdService(id, user.id);
     res.status(200).send(event);
   } catch (error) {
     res.status(400).json({ error: (error as Error).message });
@@ -57,21 +57,21 @@ export const updateEventByIdController = async (
   res: Response
 ) => {
   const { title, date, visibility, description } = req.body;
-  const { pk } = req.params;
+  const { id } = req.params;
   const user = req.user as UserType;
   const newImage = req.file?.path;
   let oldImage = "";
   try {
-    const existingEvent = await getEventByIdService(pk, user.id);
+    const existingEvent = await getEventByIdService(id, user.id);
 
-    if (existingEvent && "image" in existingEvent) {
+    if (existingEvent && !!existingEvent.image) {
       oldImage = existingEvent.image;
       if (oldImage) {
         await deleteImage(oldImage);
       }
     }
     const event = await updateEventByIdService({
-      id: pk,
+      id,
       userId: user.id,
       date,
       description,
@@ -99,18 +99,18 @@ export const deleteEventByIdController = async (
   req: Request,
   res: Response
 ) => {
-  const { pk } = req.params;
+  const { id } = req.params;
   try {
     const user = req.user as UserType;
-    const event = await getEventByIdService(pk, user.id);
+    const event = await getEventByIdService(id, user.id);
 
-    if (event && "image" in event) {
+    if (event && !!event.image) {
       const imagePath = event.image;
       if (imagePath) {
         await deleteImage(imagePath);
       }
     }
-    const message = await deleteEventByIdService(pk, user.id);
+    const message = await deleteEventByIdService(id, user.id);
 
     res.status(202).send(message);
   } catch (error) {

@@ -1,7 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import { getEnv } from "../utils/getEnv";
 import { sequelize } from "../config/database";
-import { visibilityModes } from "../utils/enums/visibilityModes";
+import { VisibilityModes } from "../utils/enums/visibilityModes";
 
 export class Event extends Model {
   declare id: string;
@@ -46,7 +46,7 @@ Event.init(
       allowNull: false,
       validate: {
         isIn: {
-          args: [Object.values(visibilityModes)],
+          args: [Object.values(VisibilityModes)],
           msg: "Visibility must be one of 'private', 'by_url', or 'public'",
         },
       },

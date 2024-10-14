@@ -23,12 +23,12 @@ eventRoutes.post(
   createEventController
 );
 eventRoutes.get("/events", isAuthenticated, getAllEventsController);
-eventRoutes.get("/events/:pk", isAuthenticated, getEventByIdController);
+eventRoutes.get("/events/:id", isAuthenticated, getEventByIdController);
 eventRoutes.put(
-  "/events/:pk",
+  "/events/:id",
   isAuthenticated,
   upload.single("image"),
   validateEventUpdate,
   updateEventByIdController
 );
-eventRoutes.delete("/events/:pk", isAuthenticated, deleteEventByIdController);
+eventRoutes.delete("/events/:id", isAuthenticated, deleteEventByIdController);

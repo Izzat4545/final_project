@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "sequelize";
-import { currency } from "../utils/enums/currency";
+import { Currencies } from "../utils/enums/currency";
 import { sequelize } from "../config/database";
 
 export class User extends Model {
@@ -8,7 +8,7 @@ export class User extends Model {
   declare email: string;
   declare password: string | null;
   declare googleId: string | null;
-  declare currency: currency;
+  declare currency: Currencies;
   declare salt: string;
 
   declare readonly createdAt: Date;
@@ -50,10 +50,10 @@ User.init(
     currency: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: currency.USD,
+      defaultValue: Currencies.USD,
       validate: {
         isIn: {
-          args: [Object.values(currency)],
+          args: [Object.values(Currencies)],
           msg: "Visibility must be one of 'UZS', 'RUB', or 'USD'",
         },
       },
