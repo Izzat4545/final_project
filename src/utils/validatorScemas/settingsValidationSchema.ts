@@ -1,8 +1,8 @@
 import Joi from "joi";
 import { currency } from "../enums/currency";
-import { settingsType } from "../../types/validatorTypes/validatorTypes";
+import { SettingsType } from "../../types/validatorTypes/validatorTypes";
 
-export const validateSettingsSchema = (query: settingsType) => {
+export const validateSettingsSchema = (query: SettingsType) => {
   const schema = Joi.object({
     newName: Joi.string().min(4).optional(),
     currency: Joi.string()

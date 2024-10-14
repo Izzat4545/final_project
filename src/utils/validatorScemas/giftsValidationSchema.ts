@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { currency } from "../enums/currency";
-import { giftType } from "../../types/validatorTypes/validatorTypes";
+import { GiftType } from "../../types/validatorTypes/validatorTypes";
 
 const TITLE_MIN_LENGTH = 3;
 const TITLE_MAX_LENGTH = 100;
@@ -15,12 +15,12 @@ const baseGiftSchema = Joi.object({
   link: Joi.string(),
 });
 
-export const validateCreateGiftSchema = (query: giftType) => {
+export const validateCreateGiftSchema = (query: GiftType) => {
   return baseGiftSchema
     .fork(["name", "currency", "price", "link"], (field) => field.required())
     .validate(query);
 };
 
-export const validateUpdateGiftSchema = (query: giftType) => {
+export const validateUpdateGiftSchema = (query: GiftType) => {
   return baseGiftSchema.validate(query);
 };

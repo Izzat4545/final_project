@@ -4,7 +4,9 @@ export const storeResetCodeRedis = async (
   email: string,
   code: string
 ): Promise<void> => {
-  const expiresIn = 10 * 60;
+  const MINUTE = 10;
+  const SECOND = 60;
+  const expiresIn = MINUTE * SECOND;
   await redisClient.set(`resetCode:${email}`, code, { EX: expiresIn });
 };
 

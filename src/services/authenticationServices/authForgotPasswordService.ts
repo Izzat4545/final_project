@@ -19,9 +19,9 @@ export const sendCodeService = async (email: string, code: string) => {
     if (!user) {
       throw new Error("This email doesn't exist");
     }
-    await sendEmail(emailCodeTemplate(email, user?.name, code));
+    await sendEmail(emailCodeTemplate(email, user.name, code));
 
-    await storeResetCodeRedis(email, code.toString());
+    await storeResetCodeRedis(email, code);
 
     return { message: "Reset code sent successfully" };
   } catch (error) {
@@ -49,28 +49,35 @@ export const verifyCodeService = async (email: string, code: string) => {
 export const resetPasswordService = async (email: string, password: string) => {
   try {
     const user = await User.findOne({ where: { email } });
-    let isPasswordNew: boolean = false;
-    if (user) {
-      // if the user is registered from google he wont have password field
-      isPasswordNew = await bcrypt.compare(password, user.password || "");
-    }
-    if (isPasswordNew) {
-      throw new Error("Please enter a new password");
-    }
-    const { hashedPassword, salt } = await generateHashedPassword(password);
 
     if (!user) {
       throw new Error("This email doesn't exist");
     }
 
-    await user?.update({ password: hashedPassword, salt });
+    // If the user has a password, check if the new password matches the old one
+    if (user.password) {
+      const isPasswordSame = await bcrypt.compare(password, user.password);
 
-    // REMOVING FROM REDIS AFTER UPDATING THE PASSWORD
+      if (isPasswordSame) {
+        throw new Error(
+          "Please enter a new password, not the same as the old one."
+        );
+      }
+    }
+
+    // If user has no password (likely registered via Google), skip comparison and directly set the new password
+    const { hashedPassword, salt } = await generateHashedPassword(password);
+
+    // Update the user's password and salt
+    await user.update({ password: hashedPassword, salt });
+
+    // Removing the reset code from Redis after updating the password
     await deleteResetCodeRedis(email);
 
     const message = await sendEmail(
-      emailChangedPasswordTemplate(email, user?.name)
+      emailChangedPasswordTemplate(email, user.name)
     );
+
     return { message };
   } catch (error) {
     throw new Error((error as Error).message);

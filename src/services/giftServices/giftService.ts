@@ -1,6 +1,6 @@
 import {
-  createGiftType,
-  updateGiftType,
+  CreateGiftType,
+  UpdateGiftType,
 } from "../../types/validatorTypes/validatorTypes";
 import { Event } from "../../models/eventModel";
 import { Gift } from "../../models/giftModel";
@@ -9,8 +9,8 @@ import { convertGiftPrices } from "./giftPriceConverter";
 import { currency } from "../../utils/enums/currency";
 import { visibilityModes } from "../../utils/enums/visibilityModes";
 
-export const createGiftService = async (data: createGiftType) => {
-  const giftData: Partial<createGiftType> = {
+export const createGiftService = async (data: CreateGiftType) => {
+  const giftData: Partial<CreateGiftType> = {
     ...data,
   };
 
@@ -97,7 +97,7 @@ export const getGiftByIdService = async (giftId: string) => {
   }
 };
 
-export const updateGiftByIdService = async (data: updateGiftType) => {
+export const updateGiftByIdService = async (data: UpdateGiftType) => {
   const { currency, userId, giftId, price, link, name, description, image } =
     data;
   try {
@@ -107,7 +107,7 @@ export const updateGiftByIdService = async (data: updateGiftType) => {
       throw new Error("Cannot find that gift in this account");
     }
 
-    const updatedFields: Partial<updateGiftType> = {};
+    const updatedFields: Partial<UpdateGiftType> = {};
 
     if (name) updatedFields.name = name;
     if (description) updatedFields.description = description;

@@ -1,12 +1,12 @@
 import { Gift } from "../../models/giftModel";
 import { convertCurrency } from "../../utils/convertCurrency";
 import { currency } from "../../utils/enums/currency";
-import { giftReturnType } from "../../types/validatorTypes/validatorTypes";
+import { GiftReturnType } from "../../types/validatorTypes/validatorTypes";
 
 export const convertGiftPrices = async (
   gifts: Gift[],
   targetCurrency: currency
-): Promise<giftReturnType[]> => {
+): Promise<GiftReturnType[]> => {
   return Promise.all(
     gifts.map(async (gift) => {
       const originalCurrency = gift.currency;
@@ -17,7 +17,7 @@ export const convertGiftPrices = async (
           ...gift.toJSON(),
           originalPrice,
           originalCurrency,
-        } as giftReturnType;
+        } as GiftReturnType;
       }
 
       const convertedPrice = await convertCurrency(
@@ -32,7 +32,7 @@ export const convertGiftPrices = async (
         price: convertedPrice.toString(),
         originalPrice,
         originalCurrency,
-      } as giftReturnType;
+      } as GiftReturnType;
     })
   );
 };

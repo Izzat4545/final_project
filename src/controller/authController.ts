@@ -8,15 +8,16 @@ import {
   sendCodeService,
   verifyCodeService,
 } from "../services/authenticationServices/authForgotPasswordService";
+import { UserType } from "../types/User";
 import { getEnv } from "../utils/getEnv";
 import passport from "passport";
 import { randomCodeGenerator } from "../utils/randomCodeGenerator";
 
 export const registerController = async (req: Request, res: Response) => {
-  const { name, email, password, repeatPassword } = req.body;
+  const { name, email, password } = req.body;
 
   try {
-    const user = await registerService(name, email, password, repeatPassword);
+    const user = await registerService(name, email, password);
     res.status(201).json({ message: "User registered successfully", ...user });
   } catch (error) {
     res.status(400).json({ error: (error as Error).message });
@@ -63,7 +64,7 @@ export const googleAuth = passport.authenticate("google", {
 });
 
 export const googleAuthCallback = (req: Request, res: Response) => {
-  const user = req.user as { token: string };
+  const user = req.user as UserType;
   const frontendLink = getEnv("FRONTEND_LINK");
   res.redirect(`${frontendLink}/dashboard?token=${user.token}`);
 };

@@ -1,18 +1,11 @@
+import { SettingsType } from "../../types/validatorTypes/validatorTypes";
 import { User } from "../../models/userModel";
 import bcrypt from "bcrypt";
 import { generateHashedPassword } from "../../utils/generateHashedPassword";
-import { settingsType } from "../../types/validatorTypes/validatorTypes";
 
-export const editProfileService = async (info: settingsType) => {
-  const {
-    userId,
-    currency,
-    newEmail,
-    newName,
-    newPassword,
-    oldPassword,
-    repeatPassword,
-  } = info;
+export const editProfileService = async (info: SettingsType) => {
+  const { userId, currency, newEmail, newName, newPassword, oldPassword } =
+    info;
   try {
     const user = await User.findByPk(userId);
 
@@ -20,35 +13,37 @@ export const editProfileService = async (info: settingsType) => {
       throw new Error("This user doesn't exist");
     }
 
-    // Only proceed with password change if any password fields are provided
-    if (oldPassword && newPassword && repeatPassword) {
-      const isMatching = await bcrypt.compare(oldPassword, user.password || "");
-      const isNewPasswordValid = newPassword === repeatPassword;
-
-      if (!isMatching) {
-        throw new Error("Old password does not match");
-      }
-
-      if (!isNewPasswordValid) {
-        throw new Error("New passwords do not match");
-      }
-
-      // Hash the new password and update it
-      const { hashedPassword, salt } = await generateHashedPassword(
-        newPassword
-      );
-      await user.update({
-        password: hashedPassword,
-        salt: salt,
-      });
-    }
-
-    // Prepare an object to store other updates (email, name, currency)
     const updateData: Partial<{
+      password: string;
       email: string;
       name: string;
       currency: string;
+      salt: string;
     }> = {};
+
+    if (newPassword) {
+      // If the user is not registered with google then check the old password
+      if (user.password) {
+        if (!oldPassword) {
+          throw new Error("Old password is required");
+        }
+
+        const isMatching = await bcrypt.compare(
+          oldPassword + user.salt,
+          user.password
+        );
+
+        if (!isMatching) {
+          throw new Error("Old password does not match");
+        }
+      }
+
+      const { hashedPassword, salt } = await generateHashedPassword(
+        newPassword
+      );
+      updateData.password = hashedPassword;
+      updateData.salt = salt;
+    }
 
     if (newEmail) {
       updateData.email = newEmail;
@@ -61,11 +56,7 @@ export const editProfileService = async (info: settingsType) => {
     if (currency) {
       updateData.currency = currency;
     }
-
-    // Update other fields (email, name, currency)
-    if (Object.keys(updateData).length > 0) {
-      await user.update(updateData);
-    }
+    await user.update(updateData);
 
     return { message: "Profile updated successfully" };
   } catch (error) {

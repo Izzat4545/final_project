@@ -1,8 +1,8 @@
 import { Event } from "../../models/eventModel";
 import { Gift } from "../../models/giftModel";
-import { eventsType } from "../../types/validatorTypes/validatorTypes";
+import { EventsType } from "../../types/validatorTypes/validatorTypes";
 
-export const createEventService = async (info: eventsType) => {
+export const createEventService = async (info: EventsType) => {
   const { date, title, userId, visibility, description, image } = info;
   try {
     const event = await Event.create({
@@ -43,7 +43,7 @@ export const getEventByIdService = async (id: string, userId: string) => {
   }
 };
 
-export const updateEventByIdService = async (info: eventsType) => {
+export const updateEventByIdService = async (info: EventsType) => {
   const { date, title, userId, visibility, description, id, image } = info;
   try {
     const event = await Event.findOne({ where: { id, userId } });
@@ -52,7 +52,7 @@ export const updateEventByIdService = async (info: eventsType) => {
       throw new Error("Event not found");
     }
 
-    const updateData: Partial<eventsType> = {};
+    const updateData: Partial<EventsType> = {};
 
     if (title) {
       updateData.title = title;

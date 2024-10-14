@@ -6,21 +6,13 @@ import {
 import { UserType } from "../types/User";
 
 export const settingsUpdateController = async (req: Request, res: Response) => {
-  const {
-    oldPassword,
-    newPassword,
-    repeatPassword,
-    newEmail,
-    newName,
-    currency,
-  } = req.body;
+  const { oldPassword, newPassword, newEmail, newName, currency } = req.body;
   try {
     const user = req.user as UserType;
     const profile = await editProfileService({
       userId: user.id,
       oldPassword,
       newPassword,
-      repeatPassword,
       currency,
       newEmail,
       newName,

@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { eventsType } from "../../types/validatorTypes/validatorTypes";
+import { EventsType } from "../../types/validatorTypes/validatorTypes";
 import { visibilityModes } from "../enums/visibilityModes";
 
 const TITLE_MIN_LENGTH = 3;
@@ -15,12 +15,12 @@ const baseEventSchema = Joi.object({
   image: Joi.string(),
 });
 
-export const validateCreateEventSchema = (query: eventsType) => {
+export const validateCreateEventSchema = (query: EventsType) => {
   return baseEventSchema
     .fork(["title", "date", "visibility"], (field) => field.required())
     .validate(query);
 };
 
-export const validateUpdateEventSchema = (query: eventsType) => {
+export const validateUpdateEventSchema = (query: EventsType) => {
   return baseEventSchema.validate(query);
 };

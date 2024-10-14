@@ -28,9 +28,9 @@ authRoutes.get(
   googleAuthCallback
 );
 
-authRoutes.post("/sendcode", validateEmail, sendCodeController);
+authRoutes.post("/sendCode", validateEmail, sendCodeController);
 authRoutes.post(
-  "/resetpassword",
+  "/resetPassword",
   validateResetPassword,
   resetPasswordController
 );

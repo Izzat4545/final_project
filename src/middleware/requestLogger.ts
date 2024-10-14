@@ -1,10 +1,10 @@
-import express from "express";
+import { NextFunction, Request, Response } from "express";
 import { logger } from "../config/logger/loggerMain";
 
 export const requestLogger = (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) => {
   const { method, url } = req;
   const startTime = Date.now();
