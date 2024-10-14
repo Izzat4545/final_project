@@ -18,15 +18,15 @@ import { rateLimiter } from "../../middleware/rateLimiter";
 
 export const authRoutes = Router();
 
-authRoutes.post("/register", rateLimiter, validateRegister, registerController);
-authRoutes.post("/login", rateLimiter, validateLogin, loginController);
-
 authRoutes.get("/google", googleAuth);
 authRoutes.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
   googleAuthCallback
 );
+
+authRoutes.post("/register", rateLimiter, validateRegister, registerController);
+authRoutes.post("/login", rateLimiter, validateLogin, loginController);
 
 authRoutes.post("/sendCode", validateEmail, sendCodeController);
 authRoutes.post(

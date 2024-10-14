@@ -10,7 +10,6 @@ export const validateRigisterSchema = (query: RegisterType) => {
     name: Joi.string().min(4),
     email: Joi.string().email().required(),
     password: Joi.string().min(8).required(),
-    repeatPassword: Joi.string().min(8).required(),
   });
 
   return schema.validate(query);

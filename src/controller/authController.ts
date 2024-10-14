@@ -66,5 +66,5 @@ export const googleAuth = passport.authenticate("google", {
 export const googleAuthCallback = (req: Request, res: Response) => {
   const user = req.user as UserType;
   const frontendLink = getEnv("FRONTEND_LINK");
-  res.redirect(`${frontendLink}/dashboard?token=${user.token}`);
+  res.redirect(`${frontendLink}/auth/callback?token=${user.token}`);
 };

@@ -1,5 +1,5 @@
-import { Gift } from "../../models/giftModel";
 import { Currencies } from "../../utils/enums/currency";
+import { Gift } from "../../models/giftModel";
 import { VisibilityModes } from "../../utils/enums/visibilityModes";
 
 export interface LoginType {
@@ -9,7 +9,6 @@ export interface LoginType {
 
 export interface RegisterType extends LoginType {
   name: string | null;
-  repeatPassword: string;
 }
 
 export interface CodeType extends LoginType {

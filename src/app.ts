@@ -6,6 +6,7 @@ import { getEnv } from "./utils/getEnv";
 import { giftRoutes } from "./routes/private/giftsRoutes";
 import { giftsPublicRoutes } from "./routes/public/giftsPublicRoutes";
 import helmet from "helmet";
+import { initializeGoogleStrategy } from "./services/authenticationServices/googleAuthService";
 import passport from "passport";
 import { requestLogger } from "./middleware/requestLogger";
 import session from "express-session";
@@ -31,6 +32,8 @@ app.use(
     cookie: { secure: false },
   })
 );
+
+initializeGoogleStrategy();
 
 app.use(passport.initialize());
 app.use(passport.session());
