@@ -1,5 +1,5 @@
 import "./models/asosiations";
-import app from "./app";
+import { app } from "./app";
 import { getEnv } from "./utils/getEnv";
 import { logger } from "./config/logger/loggerMain";
 import { sequelize } from "./config/database";

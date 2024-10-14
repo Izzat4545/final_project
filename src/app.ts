@@ -11,7 +11,7 @@ import { requestLogger } from "./middleware/requestLogger";
 import session from "express-session";
 import { settinsRoutes } from "./routes/private/settingsRoutes";
 
-const app = express();
+export const app = express();
 app.use(express.json());
 app.use(requestLogger);
 app.use(helmet());
@@ -42,5 +42,3 @@ app.use(eventRoutes);
 app.use(giftRoutes);
 
 app.use(giftsPublicRoutes);
-
-export default app;
