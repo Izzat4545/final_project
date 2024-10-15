@@ -15,14 +15,13 @@ import { settinsRoutes } from "./routes/private/settingsRoutes";
 export const app = express();
 app.use(express.json());
 app.use(requestLogger);
-app.use(helmet());
 const corsOptions = {
   origin: getEnv("CORS_ORIGINS").split(",") || [],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
-
 app.use(cors(corsOptions));
+app.use(helmet());
 
 app.use(
   session({
@@ -38,6 +37,7 @@ initializeGoogleStrategy();
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use("/uploads", express.static(getEnv("STATIC_FILES")));
 app.use("/auth", authRoutes);
 
 app.use(settinsRoutes);

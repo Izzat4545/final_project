@@ -10,10 +10,10 @@ export const convertCurrency = async (
   toCurrency: keyof ExchangeRates
 ): Promise<number> => {
   const OPEN_EXCHANGE_API_KEY = getEnv("CURRENCY_EXCHANGE_KEY");
-  const url = `https://openexchangerates.org/api/latest.json?app_id=${OPEN_EXCHANGE_API_KEY}`;
+  const EXCHANGE_URL = `https://openexchangerates.org/api/latest.json?app_id=${OPEN_EXCHANGE_API_KEY}`;
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(EXCHANGE_URL);
 
     if (!response.ok) {
       throw new Error(`Error fetching exchange rates: ${response.statusText}`);

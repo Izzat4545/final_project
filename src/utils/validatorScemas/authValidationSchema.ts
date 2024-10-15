@@ -35,7 +35,7 @@ export const validateEmailSchema = (query: string) => {
 export const validateResetPasswordSchema = (query: CodeType) => {
   const schema = Joi.object({
     email: Joi.string().email().required(),
-    password: Joi.string().required(),
+    password: Joi.string().min(8).required(),
     code: Joi.string().required(),
   });
 

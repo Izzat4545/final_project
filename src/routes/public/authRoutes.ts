@@ -29,6 +29,7 @@ authRoutes.post("/register", rateLimiter, validateRegister, registerController);
 authRoutes.post("/login", rateLimiter, validateLogin, loginController);
 
 authRoutes.post("/sendCode", validateEmail, sendCodeController);
+
 authRoutes.post(
   "/resetPassword",
   validateResetPassword,

@@ -48,6 +48,7 @@ export const sendCodeController = async (req: Request, res: Response) => {
 
 export const resetPasswordController = async (req: Request, res: Response) => {
   const { email, code, password } = req.body;
+
   try {
     const isValid = await verifyCodeService(email, code);
     if (isValid) {

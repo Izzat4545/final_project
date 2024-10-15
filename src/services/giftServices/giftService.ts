@@ -2,12 +2,12 @@ import {
   CreateGiftType,
   UpdateGiftType,
 } from "../../types/validatorTypes/validatorTypes";
+import { Currencies } from "../../utils/enums/currency";
 import { Event } from "../../models/eventModel";
 import { Gift } from "../../models/giftModel";
 import { Op } from "sequelize";
-import { convertGiftPrices } from "./giftPriceConverter";
-import { Currencies } from "../../utils/enums/currency";
 import { VisibilityModes } from "../../utils/enums/visibilityModes";
+import { convertGiftPrices } from "./giftPriceConverter";
 
 export const createGiftService = async (data: CreateGiftType) => {
   const giftData: Partial<CreateGiftType> = {
@@ -114,8 +114,7 @@ export const updateGiftByIdService = async (data: UpdateGiftType) => {
     if (image) updatedFields.image = image;
     if (price) updatedFields.price = price;
     if (currency) updatedFields.currency = currency;
-    if (currency) updatedFields.currency = currency;
-    if (currency) updatedFields.link = link;
+    if (link) updatedFields.link = link;
 
     const gifts = await gift?.update(updatedFields);
     return gifts;

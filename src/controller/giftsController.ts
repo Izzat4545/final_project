@@ -86,7 +86,7 @@ export const updateGiftByIdController = async (req: Request, res: Response) => {
   try {
     const existingGift = await getGiftByIdService(giftId);
 
-    if (existingGift && "image" in existingGift) {
+    if (existingGift && !!existingGift.image) {
       oldImage = existingGift.image;
       if (oldImage) {
         await deleteImage(oldImage);
@@ -139,7 +139,7 @@ export const deleteGiftByIdController = async (req: Request, res: Response) => {
   try {
     const gift = await getGiftByIdService(giftId);
 
-    if (gift && "image" in gift) {
+    if (gift && !!gift.image) {
       const imagePath = gift.image;
       if (imagePath) {
         await deleteImage(imagePath);

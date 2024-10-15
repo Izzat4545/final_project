@@ -56,7 +56,10 @@ export const resetPasswordService = async (email: string, password: string) => {
 
     // If the user has a password, check if the new password matches the old one
     if (user.password) {
-      const isPasswordSame = await bcrypt.compare(password, user.password);
+      const isPasswordSame = await bcrypt.compare(
+        password + user.salt,
+        user.password
+      );
 
       if (isPasswordSame) {
         throw new Error(
