@@ -116,7 +116,7 @@ export const updateGiftByIdService = async (data: UpdateGiftType) => {
     if (currency) updatedFields.currency = currency;
     if (link) updatedFields.link = link;
 
-    const gifts = await gift?.update(updatedFields);
+    const gifts = await gift.update(updatedFields);
     return gifts;
   } catch (error) {
     throw new Error(`Failed to update gifts: ${(error as Error).message}`);

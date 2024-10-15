@@ -82,18 +82,20 @@ export const updateGiftByIdController = async (req: Request, res: Response) => {
   const { currency, description, name, price, link } = req.body;
   const user = req.user as UserType;
   const newImage = req.file?.path;
-  let oldImage = "";
+
   try {
     const existingGift = await getGiftByIdService(giftId);
 
-    if (existingGift && !!existingGift.image) {
-      oldImage = existingGift.image;
-      if (oldImage) {
-        await deleteImage(oldImage);
-      }
+    // Check if the gift exists
+    if (!existingGift) {
+      throw new Error("Gift not found");
     }
 
-    const event = await updateGiftByIdService({
+    // Store the old image if it exists
+    const oldImage = existingGift.image;
+
+    // Update the gift with the new details
+    const updatedGift = await updateGiftByIdService({
       userId: user.id,
       giftId,
       name,
@@ -101,15 +103,15 @@ export const updateGiftByIdController = async (req: Request, res: Response) => {
       link,
       price,
       description,
-      image: newImage,
+      image: newImage || oldImage, // Use new image or retain old image if new image is not provided
     });
 
-    // If a new image was uploaded, delete the old image
+    // Delete the old image only if a new image was uploaded
     if (newImage && oldImage) {
       await deleteImage(oldImage);
     }
 
-    res.status(200).send(event);
+    res.status(200).send(updatedGift);
   } catch (error) {
     // Cleanup: remove the uploaded image if an error occurred
     if (newImage) {

@@ -60,16 +60,17 @@ export const updateEventByIdController = async (
   const { id } = req.params;
   const user = req.user as UserType;
   const newImage = req.file?.path;
-  let oldImage = "";
+
   try {
     const existingEvent = await getEventByIdService(id, user.id);
 
-    if (existingEvent && !!existingEvent.image) {
-      oldImage = existingEvent.image;
-      if (oldImage) {
-        await deleteImage(oldImage);
-      }
+    if (!existingEvent) {
+      throw new Error("Event not found");
     }
+
+    const oldImage = existingEvent.image;
+
+    // Update the event with the new details
     const event = await updateEventByIdService({
       id,
       userId: user.id,
@@ -80,7 +81,6 @@ export const updateEventByIdController = async (
       image: newImage || oldImage,
     });
 
-    // If a new image was uploaded, delete the old image
     if (newImage && oldImage) {
       await deleteImage(oldImage);
     }

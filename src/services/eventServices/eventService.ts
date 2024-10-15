@@ -39,10 +39,7 @@ export const getEventByIdService = async (id: string, userId: string) => {
 
     return event;
   } catch (error) {
-    return {
-      message: `Failed to get event: ${(error as Error).message}`,
-      image: null,
-    };
+    throw new Error(`Failed to get event: ${(error as Error).message}`);
   }
 };
 

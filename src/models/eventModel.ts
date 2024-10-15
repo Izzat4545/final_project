@@ -1,7 +1,7 @@
 import { DataTypes, Model } from "sequelize";
+import { VisibilityModes } from "../utils/enums/visibilityModes";
 import { getEnv } from "../utils/getEnv";
 import { sequelize } from "../config/database";
-import { VisibilityModes } from "../utils/enums/visibilityModes";
 
 export class Event extends Model {
   declare id: string;
