@@ -2,10 +2,10 @@ import { Request, Response } from "express";
 import {
   createEventService,
   deleteEventByIdService,
-  getAllEventsService,
+  getAllEventsByIdService,
   getEventByIdService,
   updateEventByIdService,
-} from "../services/EventServices/EventService";
+} from "../services/eventServices/eventService";
 import { UserType } from "../types/User";
 import { deleteImage } from "../config/imgUploadConfig";
 
@@ -15,14 +15,14 @@ export const createEventController = async (req: Request, res: Response) => {
   const image = req.file?.path;
 
   try {
-    const event = await createEventService(
-      user.id.toString(),
+    const event = await createEventService({
+      userId: user.id.toString(),
       title,
       date,
       visibility,
       description,
-      image
-    );
+      image,
+    });
 
     res.status(201).send(event);
   } catch (error) {
@@ -31,8 +31,9 @@ export const createEventController = async (req: Request, res: Response) => {
 };
 
 export const getAllEventsController = async (req: Request, res: Response) => {
+  const user = req.user as UserType;
   try {
-    const event = await getAllEventsService();
+    const event = await getAllEventsByIdService(user.id);
 
     res.status(200).send(event);
   } catch (error) {
@@ -41,10 +42,10 @@ export const getAllEventsController = async (req: Request, res: Response) => {
 };
 
 export const getEventByIdController = async (req: Request, res: Response) => {
-  const { pk } = req.params;
+  const { id } = req.params;
   try {
-    const event = await getEventByIdService(pk);
-
+    const user = req.user as UserType;
+    const event = await getEventByIdService(id, user.id);
     res.status(200).send(event);
   } catch (error) {
     res.status(400).json({ error: (error as Error).message });
@@ -56,29 +57,30 @@ export const updateEventByIdController = async (
   res: Response
 ) => {
   const { title, date, visibility, description } = req.body;
-  const { pk } = req.params;
+  const { id } = req.params;
+  const user = req.user as UserType;
   const newImage = req.file?.path;
-  let oldImage = "";
-  try {
-    const existingEvent = await getEventByIdService(pk);
 
-    if (existingEvent && "image" in existingEvent) {
-      oldImage = existingEvent.image;
-      if (oldImage) {
-        await deleteImage(oldImage);
-      }
+  try {
+    const existingEvent = await getEventByIdService(id, user.id);
+
+    if (!existingEvent) {
+      throw new Error("Event not found");
     }
 
-    const event = await updateEventByIdService(
-      pk,
-      title,
+    const oldImage = existingEvent.image;
+
+    // Update the event with the new details
+    const event = await updateEventByIdService({
+      id,
+      userId: user.id,
       date,
       description,
+      title,
       visibility,
-      newImage || oldImage
-    );
+      image: newImage || oldImage,
+    });
 
-    // If a new image was uploaded, delete the old image
     if (newImage && oldImage) {
       await deleteImage(oldImage);
     }
@@ -97,17 +99,18 @@ export const deleteEventByIdController = async (
   req: Request,
   res: Response
 ) => {
-  const { pk } = req.params;
+  const { id } = req.params;
   try {
-    const event = await getEventByIdService(pk);
+    const user = req.user as UserType;
+    const event = await getEventByIdService(id, user.id);
 
-    if (event && "image" in event) {
+    if (event && !!event.image) {
       const imagePath = event.image;
       if (imagePath) {
         await deleteImage(imagePath);
       }
     }
-    const message = await deleteEventByIdService(pk);
+    const message = await deleteEventByIdService(id, user.id);
 
     res.status(202).send(message);
   } catch (error) {
