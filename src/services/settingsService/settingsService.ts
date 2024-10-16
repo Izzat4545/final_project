@@ -36,6 +36,14 @@ export const editProfileService = async (info: SettingsType) => {
         if (!isMatching) {
           throw new Error("Old password does not match");
         }
+        const isOldPasswordMatchNewPassword = await bcrypt.compare(
+          newPassword + user.salt,
+          user.password
+        );
+
+        if (isOldPasswordMatchNewPassword) {
+          throw new Error("You cannot use old password as new password");
+        }
       }
 
       const { hashedPassword, salt } = await generateHashedPassword(
