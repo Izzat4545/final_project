@@ -1,5 +1,5 @@
-import Joi from "joi";
 import { EventsType } from "../../types/validatorTypes/validatorTypes";
+import Joi from "joi";
 import { VisibilityModes } from "../enums/visibilityModes";
 
 const TITLE_MIN_LENGTH = 3;
