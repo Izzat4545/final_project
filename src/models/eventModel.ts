@@ -1,7 +1,7 @@
 import { DataTypes, Model } from "sequelize";
+import { VisibilityModes } from "../utils/enums/visibilityModes";
 import { getEnv } from "../utils/getEnv";
 import { sequelize } from "../config/database";
-import { visibilityModes } from "../utils/enums/visibilityModes";
 
 export class Event extends Model {
   declare id: string;
@@ -11,6 +11,7 @@ export class Event extends Model {
   declare image: string;
   declare visibility: string;
   declare link: string;
+  declare userId: string;
 
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
@@ -45,10 +46,14 @@ Event.init(
       allowNull: false,
       validate: {
         isIn: {
-          args: [Object.values(visibilityModes)],
+          args: [Object.values(VisibilityModes)],
           msg: "Visibility must be one of 'private', 'by_url', or 'public'",
         },
       },
+    },
+    userId: {
+      type: DataTypes.UUID,
+      allowNull: false,
     },
     link: {
       type: DataTypes.VIRTUAL,

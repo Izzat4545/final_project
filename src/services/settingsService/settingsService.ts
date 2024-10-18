@@ -1,41 +1,51 @@
+import { SettingsType } from "../../types/validatorTypes/validatorTypes";
 import { User } from "../../models/userModel";
 import bcrypt from "bcrypt";
 import { generateHashedPassword } from "../../utils/generateHashedPassword";
 
-export const editProfileService = async (
-  email: string,
-  oldPassword: string,
-  newPassword: string,
-  repeatPassword: string,
-  newEmail?: string,
-  newName?: string
-) => {
+export const editProfileService = async (info: SettingsType) => {
+  const { userId, currency, newEmail, newName, newPassword, oldPassword } =
+    info;
   try {
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findByPk(userId);
 
     if (!user) {
-      throw new Error("This email doesn't exist");
-    }
-
-    const isMatching = await bcrypt.compare(oldPassword, user.password || "");
-    const isNewPasswordValid = newPassword === repeatPassword;
-
-    if (!isMatching) {
-      throw new Error("Old password does not match");
-    }
-
-    if (!isNewPasswordValid) {
-      throw new Error("New passwords do not match");
+      throw new Error("This user doesn't exist");
     }
 
     const updateData: Partial<{
       password: string;
       email: string;
       name: string;
+      currency: string;
       salt: string;
     }> = {};
 
-    if (isMatching && isNewPasswordValid) {
+    if (newPassword) {
+      // If the user is not registered with google then check the old password
+      if (user.password) {
+        if (!oldPassword) {
+          throw new Error("Old password is required");
+        }
+
+        const isMatching = await bcrypt.compare(
+          oldPassword + user.salt,
+          user.password
+        );
+
+        if (!isMatching) {
+          throw new Error("Old password does not match");
+        }
+        const isOldPasswordMatchNewPassword = await bcrypt.compare(
+          newPassword + user.salt,
+          user.password
+        );
+
+        if (isOldPasswordMatchNewPassword) {
+          throw new Error("You cannot use old password as new password");
+        }
+      }
+
       const { hashedPassword, salt } = await generateHashedPassword(
         newPassword
       );
@@ -50,9 +60,26 @@ export const editProfileService = async (
     if (newName) {
       updateData.name = newName;
     }
+
+    if (currency) {
+      updateData.currency = currency;
+    }
     await user.update(updateData);
 
     return { message: "Profile updated successfully" };
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+};
+
+export const getProfileService = async (userId: string) => {
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      throw new Error("This user doesn't exist");
+    }
+
+    return { name: user.name, email: user.email, currency: user.currency };
   } catch (error) {
     throw new Error((error as Error).message);
   }
