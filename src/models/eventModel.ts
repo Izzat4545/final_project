@@ -58,7 +58,7 @@ Event.init(
     link: {
       type: DataTypes.VIRTUAL,
       get: function () {
-        return `${getEnv("FRONTEND_LINK")}/${this.getDataValue("id")}`;
+        return `${getEnv("FRONTEND_LINK")}/gifts/${this.getDataValue("id")}`;
       },
     },
   },
