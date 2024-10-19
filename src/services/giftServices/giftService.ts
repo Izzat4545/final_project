@@ -125,7 +125,7 @@ export const updateGiftByIdService = async (data: UpdateGiftType) => {
 
 export const deleteGiftByIdService = async (giftId: string, userId: string) => {
   try {
-    const gift = await Gift.findOne({ where: { giftId, userId } });
+    const gift = await Gift.findOne({ where: { id: giftId, userId } });
     const gifts = await gift?.destroy();
     return gifts;
   } catch (error) {

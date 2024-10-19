@@ -2,7 +2,6 @@ import { Currencies } from "../../utils/enums/currency";
 import { Gift } from "../../models/giftModel";
 import { GiftReturnType } from "../../types/validatorTypes/validatorTypes";
 import { convertCurrency } from "../../utils/convertCurrency";
-import { logger } from "../../config/logger/loggerMain";
 
 export const convertGiftPrices = async (
   gifts: Gift[],
@@ -26,9 +25,6 @@ export const convertGiftPrices = async (
         originalCurrency,
         targetCurrency
       );
-
-      logger.info("convertCurrency:", convertCurrency);
-
       return {
         ...gift.toJSON(),
         currency: targetCurrency,

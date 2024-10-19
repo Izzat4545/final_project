@@ -149,7 +149,7 @@ export const deleteGiftByIdController = async (req: Request, res: Response) => {
     }
     const message = await deleteGiftByIdService(giftId, user.id);
 
-    res.status(202).send(message);
+    res.status(202).json(message);
   } catch (error) {
     res.status(400).json({ error: (error as Error).message });
   }
