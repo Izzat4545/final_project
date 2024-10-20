@@ -1,12 +1,14 @@
 import { Sequelize } from "sequelize";
 import { getEnv } from "../utils/getEnv";
 
-const username = getEnv("DB_USERNAME");
-const password = getEnv("DB_PASSWORD");
-const db = getEnv("DB_NAME");
-const host = getEnv("DB_HOST");
+const USERNAME = getEnv("DB_USERNAME");
+const PASSWORD = getEnv("DB_PASSWORD");
+const DB = getEnv("DB_NAME");
+const HOST = getEnv("DB_HOST");
+const PORT = parseInt(getEnv("DB_PORT")) || 5432;
 
-export const sequelize = new Sequelize(db, username, password, {
-  host,
+export const sequelize = new Sequelize(DB, USERNAME, PASSWORD, {
+  host: HOST,
+  port: PORT,
   dialect: "postgres",
 });
