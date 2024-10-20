@@ -31,8 +31,10 @@ const fileFilter = (
     cb(new Error("Only images are allowed!"));
   }
 };
+const MB = 1024 * 1024;
+const MAX_FILE_SIZE_MB = 5;
 
-const fileSize = 5 * 1024 * 1024; //5mb max
+const fileSize = MAX_FILE_SIZE_MB * MB;
 export const upload = multer({
   storage,
   limits: { fileSize: fileSize },

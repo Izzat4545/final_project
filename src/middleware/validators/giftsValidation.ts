@@ -1,30 +1,28 @@
 import { NextFunction, Request, Response } from "express";
 import {
-  validateCreateEventSchema,
-  validateUpdateEventSchema,
-} from "../../utils/validatorScemas/eventsValidationSchema";
+  validateCreateGiftSchema,
+  validateUpdateGiftSchema,
+} from "../../utils/validatorScemas/giftsValidationSchema";
 import { validatorMain } from "../../utils/validatorScemas/validatorMain";
 
-export const validateEventCreation = (
+export const validateGiftCreation = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const validatedValue = validatorMain(validateCreateEventSchema, req, res);
-
-  console.log(req.body);
+  const validatedValue = validatorMain(validateCreateGiftSchema, req, res);
   if (!validatedValue) {
     return;
   }
   next();
 };
 
-export const validateEventUpdate = (
+export const validateGiftUpdate = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const validatedValue = validatorMain(validateUpdateEventSchema, req, res);
+  const validatedValue = validatorMain(validateUpdateGiftSchema, req, res);
   if (!validatedValue) {
     return;
   }

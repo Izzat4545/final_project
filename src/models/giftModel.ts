@@ -2,20 +2,22 @@ import { DataTypes, Model } from "sequelize";
 import { Currencies } from "../utils/enums/currency";
 import { sequelize } from "../config/database";
 
-export class User extends Model {
+export class Gift extends Model {
   declare id: string;
-  declare name: string | null;
-  declare email: string;
-  declare password: string | null;
-  declare googleId: string | null;
+  declare name: string;
+  declare description: string;
+  declare image: string;
+  declare price: string;
   declare currency: Currencies;
-  declare salt: string;
+  declare link: string;
+  declare userId: string;
+  declare reservedEmail: string;
 
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
 
-User.init(
+Gift.init(
   {
     id: {
       type: DataTypes.UUID,
@@ -25,32 +27,23 @@ User.init(
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: true,
-    },
-    email: {
-      type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
-      validate: {
-        isEmail: true,
-      },
     },
-    password: {
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    image: {
       type: DataTypes.STRING,
       allowNull: true,
-      validate: {
-        len: [8, Infinity],
-      },
     },
-    googleId: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      unique: true,
+    userId: {
+      type: DataTypes.UUID,
+      allowNull: false,
     },
     currency: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: Currencies.USD,
       validate: {
         isIn: {
           args: [Object.values(Currencies)],
@@ -58,15 +51,29 @@ User.init(
         },
       },
     },
-    salt: {
+    price: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: "0",
+    },
+    link: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    reservedEmail: {
       type: DataTypes.STRING,
       allowNull: true,
-      unique: true,
+      validate: {
+        isEmail: {
+          msg: "Must be a valid email address",
+        },
+      },
     },
   },
   {
     sequelize,
-    modelName: "User",
-    tableName: "users",
+    modelName: "Gift",
+    tableName: "gifts",
+    timestamps: true,
   }
 );
