@@ -19,7 +19,7 @@ export const initializeGoogleStrategy = () => {
       {
         clientID: getEnv("GOOGLE_CLIENT_ID"),
         clientSecret: getEnv("GOOGLE_CLIENT_SECRET"),
-        callbackURL: "/auth/google/callback",
+        callbackURL: "https://justme.uz/auth/google/callback",
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
