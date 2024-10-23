@@ -42,7 +42,7 @@ export const createGiftController = async (req: Request, res: Response) => {
 };
 
 export const getAllGiftsController = async (req: Request, res: Response) => {
-  const DEFAULT_PAGE_NUMBER = 10;
+  const DEFAULT_PAGE_NUMBER = 1;
   const DEFAULT_PAGE_LIMIT = 10;
   const { eventId } = req.params;
   const { page = DEFAULT_PAGE_NUMBER, limit = DEFAULT_PAGE_LIMIT } = req.query;
