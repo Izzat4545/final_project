@@ -28,11 +28,14 @@ export const createGiftService = async (data: CreateGiftType) => {
 const DEFAULT_CURRENCY = Currencies.USD;
 export const getAllGiftsService = async (
   eventId: string,
-  currency: Currencies = DEFAULT_CURRENCY
+  currency: Currencies = DEFAULT_CURRENCY,
+  page: number = 1,
+  limit: number = 10
 ) => {
   try {
-    // GIFT CAN BE PUBLIC THEREFORE i AM NOT GETTING IT WITH USER ID
-    const gifts = await Gift.findAll({
+    const offset = (page - 1) * limit;
+
+    const { rows: gifts, count: totalGifts } = await Gift.findAndCountAll({
       where: { eventId },
       include: [
         {
@@ -41,15 +44,35 @@ export const getAllGiftsService = async (
           attributes: ["id", "title", "date", "image"],
         },
       ],
+      limit,
+      offset,
     });
 
     if (!gifts.length) {
-      return [];
+      return {
+        data: [],
+        meta: {
+          page,
+          limit,
+          totalPages: 0,
+          totalGifts: 0,
+        },
+      };
     }
-    // HERE CONVERTING THE PRICE INTO USER PREFERED CURRENCY
+
     const convertedGifts = await convertGiftPrices(gifts, currency);
 
-    return convertedGifts;
+    const totalPages = Math.ceil(totalGifts / limit);
+
+    return {
+      meta: {
+        page,
+        limit,
+        totalPages,
+        totalGifts,
+      },
+      data: convertedGifts,
+    };
   } catch (error) {
     throw new Error(`Failed to fetch gifts: ${(error as Error).message}`);
   }

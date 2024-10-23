@@ -16,7 +16,6 @@ import {
 import { Currencies } from "../utils/enums/currency";
 import { UserType } from "../types/User";
 import { deleteImage } from "../config/imgUploadConfig";
-import { logger } from "../config/logger/loggerMain";
 
 export const createGiftController = async (req: Request, res: Response) => {
   const { name, currency, link, price, description } = req.body;
@@ -43,16 +42,22 @@ export const createGiftController = async (req: Request, res: Response) => {
 };
 
 export const getAllGiftsController = async (req: Request, res: Response) => {
+  const DEFAULT_PAGE_NUMBER = 10;
+  const DEFAULT_PAGE_LIMIT = 10;
   const { eventId } = req.params;
+  const { page = DEFAULT_PAGE_NUMBER, limit = DEFAULT_PAGE_LIMIT } = req.query;
   const user = req.user as UserType | undefined;
+
+  const pageNum = parseInt(page as string, 10);
+  const limitNum = parseInt(limit as string, 10);
   try {
     const [gifts, giftCount, giftReservedCount] = await Promise.all([
-      getAllGiftsService(eventId, user?.currency),
+      getAllGiftsService(eventId, user?.currency, pageNum, limitNum),
       getGiftCountService(eventId),
       getGiftCountReservedEmailService(eventId),
     ]);
 
-    res.status(200).send({ giftCount, giftReservedCount, gifts });
+    res.status(200).send({ giftCount, giftReservedCount, ...gifts });
   } catch (error) {
     res.status(400).json({ error: (error as Error).message });
   }
@@ -169,7 +174,6 @@ export const addPublicGiftToEventController = async (
 ) => {
   const user = req.user as UserType;
   const { giftId, targetEventId } = req.body;
-  logger.info(user);
   try {
     const addedGift = addPublicGiftToEventService(
       giftId,
