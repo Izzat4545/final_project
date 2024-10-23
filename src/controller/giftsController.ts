@@ -16,6 +16,7 @@ import {
 import { Currencies } from "../utils/enums/currency";
 import { UserType } from "../types/User";
 import { deleteImage } from "../config/imgUploadConfig";
+import { logger } from "../config/logger/loggerMain";
 
 export const createGiftController = async (req: Request, res: Response) => {
   const { name, currency, link, price, description } = req.body;
@@ -166,10 +167,15 @@ export const addPublicGiftToEventController = async (
   req: Request,
   res: Response
 ) => {
+  const user = req.user as UserType;
   const { giftId, targetEventId } = req.body;
-  console.log(console.log(giftId));
+  logger.info(user);
   try {
-    const addedGift = addPublicGiftToEventService(giftId, targetEventId);
+    const addedGift = addPublicGiftToEventService(
+      giftId,
+      targetEventId,
+      user.id
+    );
     res.status(201).json(addedGift);
   } catch (error) {
     res.status(400).json({ error: (error as Error).message });

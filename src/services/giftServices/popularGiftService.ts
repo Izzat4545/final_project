@@ -6,7 +6,8 @@ import { convertGiftPrices } from "./giftPriceConverter";
 
 export const addPublicGiftToEventService = async (
   giftId: string,
-  targetEventId: string
+  targetEventId: string,
+  userId: string
 ) => {
   try {
     const selectedGift = await Gift.findByPk(giftId);
@@ -25,9 +26,14 @@ export const addPublicGiftToEventService = async (
     }
 
     const addedGift = await Gift.create({
-      ...selectedGift.toJSON(),
-      id: undefined,
+      name: selectedGift.name,
+      currency: selectedGift.currency,
+      link: selectedGift.link,
+      description: selectedGift.description,
       eventId: targetEventId,
+      image: selectedGift.image,
+      price: selectedGift.price,
+      userId,
       popularity: 0,
     });
     await selectedGift.increment("popularity");

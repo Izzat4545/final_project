@@ -42,6 +42,5 @@ app.use("/auth", authRoutes);
 
 app.use(settinsRoutes);
 app.use(eventRoutes);
-app.use(giftRoutes);
-
 app.use(giftsPublicRoutes);
+app.use(giftRoutes);

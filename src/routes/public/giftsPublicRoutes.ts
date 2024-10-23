@@ -1,5 +1,4 @@
 import {
-  addPublicGiftToEventController,
   createGiftReservationController,
   getAllGiftsController,
   getPopularGiftsController,
@@ -11,7 +10,6 @@ import { isAuthenticatedSoft } from "../../middleware/authMiddlewareSoft";
 
 export const giftsPublicRoutes = Router();
 
-giftsPublicRoutes.post("/gifts/popular", addPublicGiftToEventController);
 giftsPublicRoutes.get(
   "/gifts/popular",
   isAuthenticatedSoft,
