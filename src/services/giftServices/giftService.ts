@@ -6,7 +6,6 @@ import { Currencies } from "../../utils/enums/currency";
 import { Event } from "../../models/eventModel";
 import { Gift } from "../../models/giftModel";
 import { Op } from "sequelize";
-import { VisibilityModes } from "../../utils/enums/visibilityModes";
 import { convertGiftPrices } from "./giftPriceConverter";
 
 export const createGiftService = async (data: CreateGiftType) => {
@@ -56,36 +55,6 @@ export const getAllGiftsService = async (
   }
 };
 
-export const getAllPublicGiftsService = async (
-  currency: Currencies = DEFAULT_CURRENCY
-) => {
-  try {
-    const gifts = await Gift.findAll({
-      include: [
-        {
-          model: Event,
-          as: "event",
-          where: {
-            visibility: VisibilityModes.PUBLIC,
-          },
-        },
-      ],
-    });
-
-    if (!gifts.length) {
-      return [];
-    }
-    // HERE CONVERTING THE PRICE INTO USER PREFERED CURRENCY
-    const convertedGifts = await convertGiftPrices(gifts, currency);
-
-    return convertedGifts;
-  } catch (error) {
-    throw new Error(
-      `Failed to fetch public gifts: ${(error as Error).message}`
-    );
-  }
-};
-
 export const getGiftByIdService = async (giftId: string) => {
   try {
     const gifts = await Gift.findOne({
@@ -126,7 +95,12 @@ export const updateGiftByIdService = async (data: UpdateGiftType) => {
 export const deleteGiftByIdService = async (giftId: string, userId: string) => {
   try {
     const gift = await Gift.findOne({ where: { id: giftId, userId } });
-    const gifts = await gift?.destroy();
+
+    if (!gift) {
+      throw new Error("Gift not found");
+    }
+
+    const gifts = await gift.destroy();
     return gifts;
   } catch (error) {
     throw new Error(`Failed to delete gifts: ${(error as Error).message}`);
@@ -176,7 +150,7 @@ export const createGiftReservationService = async (
       throw new Error("This gift has already been reserved");
     }
 
-    const updatedGift = await gift?.update({ reservedEmail });
+    const updatedGift = await gift.update({ reservedEmail });
 
     return updatedGift;
   } catch (error) {

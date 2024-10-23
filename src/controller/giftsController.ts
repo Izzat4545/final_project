@@ -1,15 +1,19 @@
 import { Request, Response } from "express";
 import {
+  addPublicGiftToEventService,
+  getPopularGiftsService,
+} from "../services/giftServices/popularGiftService";
+import {
   createGiftReservationService,
   createGiftService,
   deleteGiftByIdService,
   getAllGiftsService,
-  getAllPublicGiftsService,
   getGiftByIdService,
   getGiftCountReservedEmailService,
   getGiftCountService,
   updateGiftByIdService,
 } from "../services/giftServices/giftService";
+import { Currencies } from "../utils/enums/currency";
 import { UserType } from "../types/User";
 import { deleteImage } from "../config/imgUploadConfig";
 
@@ -64,12 +68,15 @@ export const getGiftByIdController = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllPublicGiftsController = async (
+export const getPopularGiftsController = async (
   req: Request,
   res: Response
 ) => {
+  const user = req.user as UserType | undefined;
+  const DEFAULT_CURRENCY = Currencies.USD;
   try {
-    const gifts = await getAllPublicGiftsService();
+    const currency = user ? user.currency : DEFAULT_CURRENCY;
+    const gifts = await getPopularGiftsService(currency);
 
     res.status(200).send(gifts);
   } catch (error) {
@@ -150,6 +157,20 @@ export const deleteGiftByIdController = async (req: Request, res: Response) => {
     const message = await deleteGiftByIdService(giftId, user.id);
 
     res.status(202).json(message);
+  } catch (error) {
+    res.status(400).json({ error: (error as Error).message });
+  }
+};
+
+export const addPublicGiftToEventController = async (
+  req: Request,
+  res: Response
+) => {
+  const { giftId, targetEventId } = req.body;
+  console.log(console.log(giftId));
+  try {
+    const addedGift = addPublicGiftToEventService(giftId, targetEventId);
+    res.status(201).json(addedGift);
   } catch (error) {
     res.status(400).json({ error: (error as Error).message });
   }

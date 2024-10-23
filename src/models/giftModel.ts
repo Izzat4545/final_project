@@ -12,6 +12,8 @@ export class Gift extends Model {
   declare link: string;
   declare userId: string;
   declare reservedEmail: string;
+  declare eventId: string;
+  declare popularity: number;
 
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
@@ -40,6 +42,15 @@ Gift.init(
     userId: {
       type: DataTypes.UUID,
       allowNull: false,
+    },
+    eventId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    popularity: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
     },
     currency: {
       type: DataTypes.STRING,
