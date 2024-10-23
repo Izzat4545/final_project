@@ -29,8 +29,8 @@ const DEFAULT_CURRENCY = Currencies.USD;
 export const getAllGiftsService = async (
   eventId: string,
   currency: Currencies = DEFAULT_CURRENCY,
-  page: number = 1,
-  limit: number = 10
+  page: number,
+  limit: number
 ) => {
   try {
     const offset = (page - 1) * limit;
