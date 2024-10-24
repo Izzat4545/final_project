@@ -25,6 +25,10 @@ export const addPublicGiftToEventService = async (
       throw new Error(`This event is private`);
     }
 
+    if (selectedEvent.userId === userId) {
+      throw new Error(`This gift belongs to you cant claim it again`);
+    }
+
     const addedGift = await Gift.create({
       name: selectedGift.name,
       currency: selectedGift.currency,
