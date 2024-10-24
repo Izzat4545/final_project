@@ -1,5 +1,5 @@
-import Joi from "joi";
 import { Currencies } from "../enums/currency";
+import Joi from "joi";
 import { SettingsType } from "../../types/validatorTypes/validatorTypes";
 
 export const validateSettingsSchema = (query: SettingsType) => {

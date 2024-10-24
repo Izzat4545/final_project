@@ -1,6 +1,9 @@
-import Joi from "joi";
+import {
+  AddGiftToEventType,
+  GiftType,
+} from "../../types/validatorTypes/validatorTypes";
 import { Currencies } from "../enums/currency";
-import { GiftType } from "../../types/validatorTypes/validatorTypes";
+import Joi from "joi";
 
 const TITLE_MIN_LENGTH = 3;
 const TITLE_MAX_LENGTH = 100;
@@ -14,6 +17,15 @@ const baseGiftSchema = Joi.object({
   price: Joi.string(),
   link: Joi.string(),
 });
+
+export const validateAddPopularGiftSchema = (query: AddGiftToEventType) => {
+  const schema = Joi.object({
+    giftId: Joi.string().required(),
+    targetEventId: Joi.string().required(),
+  });
+
+  return schema.validate(query);
+};
 
 export const validateCreateGiftSchema = (query: GiftType) => {
   return baseGiftSchema

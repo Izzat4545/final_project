@@ -70,3 +70,8 @@ export type ExchangeRateResponse = {
   base: string;
   timestamp: number;
 };
+
+export interface AddGiftToEventType {
+  giftId: string;
+  targetEventId: string;
+}

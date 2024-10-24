@@ -79,7 +79,12 @@ export const getProfileService = async (userId: string) => {
       throw new Error("This user doesn't exist");
     }
 
-    return { name: user.name, email: user.email, currency: user.currency };
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      currency: user.currency,
+    };
   } catch (error) {
     throw new Error((error as Error).message);
   }

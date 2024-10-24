@@ -1,9 +1,11 @@
 import {
+  addPublicGiftToEventController,
   createGiftController,
   deleteGiftByIdController,
   updateGiftByIdController,
 } from "../../controller/giftsController";
 import {
+  validateAddPopularGiftToEvent,
   validateGiftCreation,
   validateGiftUpdate,
 } from "../../middleware/validators/giftsValidation";
@@ -12,6 +14,13 @@ import { isAuthenticated } from "../../middleware/authMiddleware";
 import { upload } from "../../config/imgUploadConfig";
 
 export const giftRoutes = Router();
+
+giftRoutes.post(
+  "/gifts/popular",
+  isAuthenticated,
+  validateAddPopularGiftToEvent,
+  addPublicGiftToEventController
+);
 
 giftRoutes.post(
   "/gifts/:eventId",

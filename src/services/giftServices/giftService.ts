@@ -6,7 +6,6 @@ import { Currencies } from "../../utils/enums/currency";
 import { Event } from "../../models/eventModel";
 import { Gift } from "../../models/giftModel";
 import { Op } from "sequelize";
-import { VisibilityModes } from "../../utils/enums/visibilityModes";
 import { convertGiftPrices } from "./giftPriceConverter";
 
 export const createGiftService = async (data: CreateGiftType) => {
@@ -14,6 +13,10 @@ export const createGiftService = async (data: CreateGiftType) => {
     ...data,
   };
 
+  // Check if the link has 'http://' or 'https://', and prepend 'https://' if not
+  if (data.link && !/^(http:\/\/|https:\/\/)/.test(data.link)) {
+    giftData.link = `https://${data.link}`;
+  }
   if (data.description) giftData.description = data.description;
   if (data.image) giftData.image = data.image;
 
@@ -29,11 +32,14 @@ export const createGiftService = async (data: CreateGiftType) => {
 const DEFAULT_CURRENCY = Currencies.USD;
 export const getAllGiftsService = async (
   eventId: string,
-  currency: Currencies = DEFAULT_CURRENCY
+  currency: Currencies = DEFAULT_CURRENCY,
+  page: number,
+  limit: number
 ) => {
   try {
-    // GIFT CAN BE PUBLIC THEREFORE i AM NOT GETTING IT WITH USER ID
-    const gifts = await Gift.findAll({
+    const offset = (page - 1) * limit;
+
+    const { rows: gifts, count: totalGifts } = await Gift.findAndCountAll({
       where: { eventId },
       include: [
         {
@@ -42,47 +48,37 @@ export const getAllGiftsService = async (
           attributes: ["id", "title", "date", "image"],
         },
       ],
+      limit,
+      offset,
     });
 
     if (!gifts.length) {
-      return [];
+      return {
+        data: [],
+        meta: {
+          page,
+          limit,
+          totalPages: 0,
+          totalGifts: 0,
+        },
+      };
     }
-    // HERE CONVERTING THE PRICE INTO USER PREFERED CURRENCY
+
     const convertedGifts = await convertGiftPrices(gifts, currency);
 
-    return convertedGifts;
+    const totalPages = Math.ceil(totalGifts / limit);
+
+    return {
+      meta: {
+        page,
+        limit,
+        totalPages,
+        totalGifts,
+      },
+      data: convertedGifts,
+    };
   } catch (error) {
     throw new Error(`Failed to fetch gifts: ${(error as Error).message}`);
-  }
-};
-
-export const getAllPublicGiftsService = async (
-  currency: Currencies = DEFAULT_CURRENCY
-) => {
-  try {
-    const gifts = await Gift.findAll({
-      include: [
-        {
-          model: Event,
-          as: "event",
-          where: {
-            visibility: VisibilityModes.PUBLIC,
-          },
-        },
-      ],
-    });
-
-    if (!gifts.length) {
-      return [];
-    }
-    // HERE CONVERTING THE PRICE INTO USER PREFERED CURRENCY
-    const convertedGifts = await convertGiftPrices(gifts, currency);
-
-    return convertedGifts;
-  } catch (error) {
-    throw new Error(
-      `Failed to fetch public gifts: ${(error as Error).message}`
-    );
   }
 };
 
@@ -126,7 +122,12 @@ export const updateGiftByIdService = async (data: UpdateGiftType) => {
 export const deleteGiftByIdService = async (giftId: string, userId: string) => {
   try {
     const gift = await Gift.findOne({ where: { id: giftId, userId } });
-    const gifts = await gift?.destroy();
+
+    if (!gift) {
+      throw new Error("Gift not found");
+    }
+
+    const gifts = await gift.destroy();
     return gifts;
   } catch (error) {
     throw new Error(`Failed to delete gifts: ${(error as Error).message}`);
@@ -176,7 +177,7 @@ export const createGiftReservationService = async (
       throw new Error("This gift has already been reserved");
     }
 
-    const updatedGift = await gift?.update({ reservedEmail });
+    const updatedGift = await gift.update({ reservedEmail });
 
     return updatedGift;
   } catch (error) {
