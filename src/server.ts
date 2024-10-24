@@ -1,5 +1,5 @@
 import "./models/asosiations";
-import app from "./app";
+import { app } from "./app";
 import { getEnv } from "./utils/getEnv";
 import { logger } from "./config/logger/loggerMain";
 import { sequelize } from "./config/database";
@@ -7,7 +7,7 @@ import { sequelize } from "./config/database";
 const PORT = getEnv("PORT");
 
 sequelize
-  .sync()
+  .sync({ force: true })
   .then(() => {
     logger.info("Database connected and models synced");
 

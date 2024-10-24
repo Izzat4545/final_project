@@ -45,14 +45,14 @@ export const isAuthenticated = (
       const user = decoded as UserType;
       req.user = user;
 
-      const dbUser = await User.findByPk(user.id);
-      if (!dbUser) {
+      const findById = await User.findByPk(user.id);
+      if (!findById) {
         return res.status(404).json({
           success: false,
           message: "User not found",
         });
       }
-      req.user = dbUser;
+      req.user = findById;
       next();
     });
   } catch (error) {

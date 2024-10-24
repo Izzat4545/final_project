@@ -11,6 +11,8 @@ export const validateEventCreation = (
   next: NextFunction
 ) => {
   const validatedValue = validatorMain(validateCreateEventSchema, req, res);
+
+  console.log(req.body);
   if (!validatedValue) {
     return;
   }
