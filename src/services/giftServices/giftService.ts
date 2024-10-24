@@ -13,6 +13,10 @@ export const createGiftService = async (data: CreateGiftType) => {
     ...data,
   };
 
+  // Check if the link has 'http://' or 'https://', and prepend 'https://' if not
+  if (data.link && !/^(http:\/\/|https:\/\/)/.test(data.link)) {
+    giftData.link = `https://${data.link}`;
+  }
   if (data.description) giftData.description = data.description;
   if (data.image) giftData.image = data.image;
 
