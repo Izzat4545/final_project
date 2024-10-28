@@ -106,11 +106,11 @@ export const updateGiftByIdService = async (data: UpdateGiftType) => {
     const updatedFields: Partial<UpdateGiftType> = {};
 
     if (name) updatedFields.name = name;
-    if (description) updatedFields.description = description;
     if (image) updatedFields.image = image;
     if (price) updatedFields.price = price;
     if (currency) updatedFields.currency = currency;
     if (link) updatedFields.link = link;
+    updatedFields.description = description || "";
 
     const gifts = await gift.update(updatedFields);
     return gifts;

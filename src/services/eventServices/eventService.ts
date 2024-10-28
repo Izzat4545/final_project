@@ -60,15 +60,13 @@ export const updateEventByIdService = async (info: EventsType) => {
     if (date) {
       updateData.date = date;
     }
-    if (description) {
-      updateData.description = description;
-    }
     if (visibility) {
       updateData.visibility = visibility;
     }
     if (image) {
       updateData.image = image;
     }
+    updateData.description = description || "";
 
     const updatedData = await event.update({ ...updateData });
 
