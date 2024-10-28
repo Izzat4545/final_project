@@ -58,3 +58,19 @@ export const deleteImage = async (imagePath: string): Promise<void> => {
     logger.error("Error deleting image:", error);
   }
 };
+
+export const imageDuplicator = async (imagePath: string): Promise<string> => {
+  // Generate a new unique file name for the duplicate
+  const imageDir = path.dirname(imagePath);
+  const imageExt = path.extname(imagePath);
+  const newImageName = `${path.basename(
+    imagePath,
+    imageExt
+  )}_copy${Date.now()}${imageExt}`;
+  const newImagePath = path.join(imageDir, newImageName);
+
+  // Duplicate the image file asynchronously
+  await fs.promises.copyFile(imagePath, newImagePath);
+
+  return newImagePath;
+};

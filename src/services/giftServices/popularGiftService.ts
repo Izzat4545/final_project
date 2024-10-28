@@ -3,6 +3,7 @@ import { Event } from "../../models/eventModel";
 import { Gift } from "../../models/giftModel";
 import { VisibilityModes } from "../../utils/enums/visibilityModes";
 import { convertGiftPrices } from "./giftPriceConverter";
+import { imageDuplicator } from "../../config/imgUploadConfig";
 
 export const addPublicGiftToEventService = async (
   giftId: string,
@@ -29,13 +30,15 @@ export const addPublicGiftToEventService = async (
       throw new Error(`This gift belongs to you cant claim it again`);
     }
 
+    const duplicatedImagePath = await imageDuplicator(selectedGift.image);
+
     const addedGift = await Gift.create({
       name: selectedGift.name,
       currency: selectedGift.currency,
       link: selectedGift.link,
       description: selectedGift.description,
       eventId: targetEventId,
-      image: selectedGift.image,
+      image: duplicatedImagePath,
       price: selectedGift.price,
       userId,
       popularity: 0,
