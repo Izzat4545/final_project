@@ -31,7 +31,7 @@ export interface EventsType {
   title: string;
   date: string;
   visibility: VisibilityModes;
-  description?: string;
+  description?: string | null;
   image?: string;
 }
 

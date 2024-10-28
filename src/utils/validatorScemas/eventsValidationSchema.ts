@@ -11,7 +11,7 @@ const baseEventSchema = Joi.object({
   date: Joi.date().iso(),
   visibility: Joi.string().valid(...Object.values(VisibilityModes)),
 
-  description: Joi.string().max(DESCRIPTION_MAX_LENGTH),
+  description: Joi.string().max(DESCRIPTION_MAX_LENGTH).allow(null),
   image: Joi.string(),
 });
 

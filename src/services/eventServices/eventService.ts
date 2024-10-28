@@ -66,7 +66,7 @@ export const updateEventByIdService = async (info: EventsType) => {
     if (image) {
       updateData.image = image;
     }
-    updateData.description = description || "";
+    updateData.description = description || null;
 
     const updatedData = await event.update({ ...updateData });
 
