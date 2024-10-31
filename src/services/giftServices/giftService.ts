@@ -95,8 +95,17 @@ export const getGiftByIdService = async (giftId: string) => {
 };
 
 export const updateGiftByIdService = async (data: UpdateGiftType) => {
-  const { currency, userId, giftId, price, link, name, description, image } =
-    data;
+  const {
+    currency,
+    userId,
+    giftId,
+    price,
+    link,
+    name,
+    description,
+    image,
+    category,
+  } = data;
   try {
     const gift = await Gift.findOne({ where: { id: giftId, userId } });
 
@@ -111,6 +120,7 @@ export const updateGiftByIdService = async (data: UpdateGiftType) => {
     if (price) updatedFields.price = price;
     if (currency) updatedFields.currency = currency;
     if (link) updatedFields.link = link;
+    if (category) updatedFields.category = category;
     updatedFields.description = description || "";
 
     const gifts = await gift.update(updatedFields);
