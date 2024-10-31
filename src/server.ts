@@ -7,7 +7,7 @@ import { sequelize } from "./config/database";
 const PORT = getEnv("PORT");
 
 sequelize
-  .sync({ force: true })
+  .sync({ alter: true })
   .then(() => {
     logger.info("Database connected and models synced");
 
