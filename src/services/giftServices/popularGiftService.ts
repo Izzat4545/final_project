@@ -40,6 +40,7 @@ export const addPublicGiftToEventService = async (
       eventId: targetEventId,
       image: duplicatedImagePath,
       price: selectedGift.price,
+      category: selectedGift.category,
       userId,
       popularity: 0,
     });
