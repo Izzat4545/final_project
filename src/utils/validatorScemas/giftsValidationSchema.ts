@@ -3,6 +3,7 @@ import {
   GiftType,
 } from "../../types/validatorTypes/validatorTypes";
 import { Currencies } from "../enums/currency";
+import { GiftCategories } from "../enums/giftCategories";
 import Joi from "joi";
 
 const TITLE_MIN_LENGTH = 3;
@@ -13,6 +14,7 @@ const baseGiftSchema = Joi.object({
   name: Joi.string().min(TITLE_MIN_LENGTH).max(TITLE_MAX_LENGTH),
   currency: Joi.string().valid(...Object.values(Currencies)),
   description: Joi.string().max(DESCRIPTION_MAX_LENGTH),
+  category: Joi.string().valid(...Object.values(GiftCategories)),
   image: Joi.string(),
   price: Joi.string(),
   link: Joi.string(),

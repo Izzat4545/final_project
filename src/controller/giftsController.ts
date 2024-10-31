@@ -18,7 +18,7 @@ import { UserType } from "../types/User";
 import { deleteImage } from "../config/imgUploadConfig";
 
 export const createGiftController = async (req: Request, res: Response) => {
-  const { name, currency, link, price, description } = req.body;
+  const { name, currency, link, price, description, category } = req.body;
   const { eventId } = req.params;
   const user = req.user as UserType;
   const image = req.file?.path;
@@ -30,9 +30,10 @@ export const createGiftController = async (req: Request, res: Response) => {
       name,
       currency,
       link,
+      category,
       description,
-      image,
       price,
+      image,
     });
 
     res.status(201).send(event);
@@ -45,14 +46,24 @@ export const getAllGiftsController = async (req: Request, res: Response) => {
   const DEFAULT_PAGE_NUMBER = 1;
   const DEFAULT_PAGE_LIMIT = 10;
   const { eventId } = req.params;
-  const { page = DEFAULT_PAGE_NUMBER, limit = DEFAULT_PAGE_LIMIT } = req.query;
+  const {
+    category,
+    page = DEFAULT_PAGE_NUMBER,
+    limit = DEFAULT_PAGE_LIMIT,
+  } = req.query;
   const user = req.user as UserType | undefined;
 
   const pageNum = parseInt(page as string, 10);
   const limitNum = parseInt(limit as string, 10);
   try {
     const [gifts, giftCount, giftReservedCount] = await Promise.all([
-      getAllGiftsService(eventId, user?.currency, pageNum, limitNum),
+      getAllGiftsService(
+        eventId,
+        user?.currency,
+        pageNum,
+        limitNum,
+        category?.toString()
+      ),
       getGiftCountService(eventId),
       getGiftCountReservedEmailService(eventId),
     ]);
@@ -92,7 +103,7 @@ export const getPopularGiftsController = async (
 
 export const updateGiftByIdController = async (req: Request, res: Response) => {
   const { giftId } = req.params;
-  const { currency, description, name, price, link } = req.body;
+  const { currency, description, name, price, link, category } = req.body;
   const user = req.user as UserType;
   const newImage = req.file?.path;
 
@@ -115,6 +126,7 @@ export const updateGiftByIdController = async (req: Request, res: Response) => {
       currency,
       link,
       price,
+      category,
       description,
       image: newImage || oldImage, // Use new image or retain old image if new image is not provided
     });

@@ -40,6 +40,7 @@ export interface GiftType {
   currency: Currencies;
   link: string;
   price: string;
+  category: string;
   description?: string;
   image?: string;
 }
