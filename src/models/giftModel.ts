@@ -1,5 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import { Currencies } from "../utils/enums/currency";
+import { GiftCategories } from "../utils/enums/giftCategories";
 import { sequelize } from "../config/database";
 
 export class Gift extends Model {
@@ -13,6 +14,7 @@ export class Gift extends Model {
   declare userId: string;
   declare reservedEmail: string;
   declare eventId: string;
+  declare category: GiftCategories;
   declare popularity: number;
 
   declare readonly createdAt: Date;
@@ -70,6 +72,16 @@ Gift.init(
     link: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    category: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isIn: {
+          args: [Object.values(GiftCategories)],
+          msg: "Invalid category",
+        },
+      },
     },
     reservedEmail: {
       type: DataTypes.STRING,

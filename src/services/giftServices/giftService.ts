@@ -34,13 +34,14 @@ export const getAllGiftsService = async (
   eventId: string,
   currency: Currencies = DEFAULT_CURRENCY,
   page: number,
-  limit: number
+  limit: number,
+  category?: string
 ) => {
   try {
     const offset = (page - 1) * limit;
 
     const { rows: gifts, count: totalGifts } = await Gift.findAndCountAll({
-      where: { eventId },
+      where: { eventId, ...(category ? { category } : {}) },
       include: [
         {
           model: Event,
