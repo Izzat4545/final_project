@@ -9,8 +9,6 @@ import {
   deleteGiftByIdService,
   getAllGiftsService,
   getGiftByIdService,
-  getGiftCountReservedEmailService,
-  getGiftCountService,
   updateGiftByIdService,
 } from "../services/giftServices/giftService";
 import { Currencies } from "../utils/enums/currency";
@@ -56,19 +54,14 @@ export const getAllGiftsController = async (req: Request, res: Response) => {
   const pageNum = parseInt(page as string, 10);
   const limitNum = parseInt(limit as string, 10);
   try {
-    const [gifts, giftCount, giftReservedCount] = await Promise.all([
-      getAllGiftsService(
-        eventId,
-        user?.currency,
-        pageNum,
-        limitNum,
-        category?.toString()
-      ),
-      getGiftCountService(eventId),
-      getGiftCountReservedEmailService(eventId),
-    ]);
-
-    res.status(200).send({ giftCount, giftReservedCount, ...gifts });
+    const gifts = await getAllGiftsService(
+      eventId,
+      user?.currency,
+      pageNum,
+      limitNum,
+      category?.toString()
+    );
+    res.status(200).send({ ...gifts });
   } catch (error) {
     res.status(400).json({ error: (error as Error).message });
   }

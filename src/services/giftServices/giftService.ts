@@ -3,7 +3,6 @@ import {
   UpdateGiftType,
 } from "../../types/validatorTypes/validatorTypes";
 import { Currencies } from "../../utils/enums/currency";
-import { Event } from "../../models/eventModel";
 import { Gift } from "../../models/giftModel";
 import { Op } from "sequelize";
 import { convertGiftPrices } from "./giftPriceConverter";
@@ -42,13 +41,6 @@ export const getAllGiftsService = async (
 
     const { rows: gifts, count: totalGifts } = await Gift.findAndCountAll({
       where: { eventId, ...(category ? { category } : {}) },
-      include: [
-        {
-          model: Event,
-          as: "event",
-          attributes: ["id", "title", "date", "image"],
-        },
-      ],
       limit,
       offset,
     });

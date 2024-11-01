@@ -6,6 +6,10 @@ import {
   getEventByIdService,
   updateEventByIdService,
 } from "../services/eventServices/eventService";
+import {
+  getGiftCountReservedEmailService,
+  getGiftCountService,
+} from "../services/giftServices/giftService";
 import { UserType } from "../types/User";
 import { deleteImage } from "../config/imgUploadConfig";
 
@@ -45,8 +49,14 @@ export const getEventByIdController = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const user = req.user as UserType;
-    const event = await getEventByIdService(id, user.id);
-    res.status(200).send(event);
+    const [event, giftCount, giftReservedCount] = await Promise.all([
+      getEventByIdService(id, user.id).then((event) =>
+        event?.get({ plain: true })
+      ),
+      getGiftCountService(id),
+      getGiftCountReservedEmailService(id),
+    ]);
+    res.status(200).send({ ...event, giftCount, giftReservedCount });
   } catch (error) {
     res.status(400).json({ error: (error as Error).message });
   }
